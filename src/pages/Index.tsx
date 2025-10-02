@@ -4,6 +4,7 @@ import { ClientInputForm, ClientData } from "@/components/ClientInputForm";
 import { BriefingOutput } from "@/components/BriefingOutput";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import detectiveLogo from "@/assets/detective-logo.png";
 
 const Index = () => {
@@ -12,12 +13,25 @@ const Index = () => {
   const [clientData, setClientData] = useState<ClientData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Redirect to auth page on first visit (mockup behavior)
+  // Check authentication status
   useEffect(() => {
-    const hasVisited = sessionStorage.getItem("mockLoggedIn");
-    if (!hasVisited) {
-      navigate("/auth");
-    }
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth");
+      }
+    };
+    
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        navigate("/auth");
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   const handleFormSubmit = async (data: ClientData) => {
