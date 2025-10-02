@@ -74,10 +74,21 @@ The JSON structure must be:
     "competitors": ["string"],
     "insights": ["string"]
   },
-  "nextSteps": ["string"]
+  "nextSteps": ["string"],
+  "references": [
+    {
+      "id": number,
+      "text": "string (source description like 'Company Website - About Page', 'Q4 2024 Earnings Report', 'Industry Analysis Report 2024')",
+      "url": "string (realistic URL)"
+    }
+  ]
 }
 
-Generate realistic, detailed information. Include at least 6-8 IBM watsonx solution options in solutionMapping with varying compatibility scores (55-95).`;
+CRITICAL: Add reference citations throughout the content using [ref:X] format where X is the reference ID number.
+For example: "The company reported $5.2B in revenue [ref:1] and plans to expand into AI [ref:2]."
+
+Generate realistic, detailed information with 8-12 references from various sources (company website, earnings reports, industry publications, news articles, analyst reports).
+Include at least 6-8 IBM watsonx solution options in solutionMapping with varying compatibility scores (55-95).`;
 
     const userPrompt = `Generate a comprehensive sales briefing for:
 Company: ${clientName}

@@ -221,6 +221,40 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
   const keyQuestions = briefing.keyQuestions || [];
   const nextSteps = briefing.nextSteps || [];
   const pastInteractions = briefing.crmData?.pastInteractions || [];
+  const references = briefing.references || [];
+
+  // Function to render text with reference links
+  const renderWithReferences = (text: string) => {
+    if (!text) return null;
+    
+    // Split text by [ref:X] patterns
+    const parts = text.split(/(\[ref:\d+\])/g);
+    
+    return parts.map((part, index) => {
+      const refMatch = part.match(/\[ref:(\d+)\]/);
+      if (refMatch) {
+        const refId = parseInt(refMatch[1]);
+        const reference = references.find((r: any) => r.id === refId);
+        
+        if (reference) {
+          return (
+            <sup key={index}>
+              <a
+                href={reference.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 font-medium ml-0.5"
+                title={reference.text}
+              >
+                [{refId}]
+              </a>
+            </sup>
+          );
+        }
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
   
   // Find the highest compatibility score and top solutions
   const maxCompatibility = solutionMapping.length > 0 
@@ -375,9 +409,9 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-base leading-relaxed">{briefing.summary}</p>
+              <p className="text-base leading-relaxed">{renderWithReferences(briefing.summary)}</p>
               <div className="p-4 bg-muted/30 rounded-lg border-l-4 border-primary">
-                <p className="text-base text-muted-foreground leading-relaxed">{briefing.context}</p>
+                <p className="text-base text-muted-foreground leading-relaxed">{renderWithReferences(briefing.context)}</p>
               </div>
             </CardContent>
           </Card>
@@ -398,10 +432,10 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
                 {opportunities.map((opp: any, idx: number) => (
                   <div key={idx} className="p-4 bg-muted/30 rounded-lg space-y-2">
                     <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-semibold text-base">{opp.title}</h4>
+                      <h4 className="font-semibold text-base">{renderWithReferences(opp.title)}</h4>
                       <Badge variant="outline" className="whitespace-nowrap">{opp.date}</Badge>
                     </div>
-                    <p className="text-base text-muted-foreground leading-relaxed">{opp.description}</p>
+                    <p className="text-base text-muted-foreground leading-relaxed">{renderWithReferences(opp.description)}</p>
                   </div>
                 ))}
               </div>
@@ -421,7 +455,7 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
                 {painPoints.map((point: string, idx: number) => (
                   <li key={idx} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
                     <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-base">{point}</span>
+                    <span className="text-base">{renderWithReferences(point)}</span>
                   </li>
                 ))}
               </ul>
@@ -481,17 +515,17 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
                           
                           <div>
                             <h5 className="text-sm font-semibold text-muted-foreground mb-2">Overview</h5>
-                            <p className="text-base leading-relaxed">{solution.reason}</p>
+                            <p className="text-base leading-relaxed">{renderWithReferences(solution.reason)}</p>
                           </div>
                           
                           <div className="p-4 bg-primary/10 rounded-lg border-l-4 border-primary">
                             <h5 className="text-sm font-semibold text-primary mb-2">Why Interesting</h5>
-                            <p className="text-base leading-relaxed">{solution.whyInteresting}</p>
+                            <p className="text-base leading-relaxed">{renderWithReferences(solution.whyInteresting)}</p>
                           </div>
                           
                           <div>
                             <h5 className="text-sm font-semibold text-muted-foreground mb-2">Considerations</h5>
-                            <p className="text-base text-muted-foreground leading-relaxed">{solution.whyNotInteresting}</p>
+                            <p className="text-base text-muted-foreground leading-relaxed">{renderWithReferences(solution.whyNotInteresting)}</p>
                           </div>
                           
                           <div>
@@ -654,7 +688,7 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
                     {briefing.competitiveIntel.insights.map((insight: string, idx: number) => (
                       <li key={idx} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
                         <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <span className="text-base">{insight}</span>
+                        <span className="text-base">{renderWithReferences(insight)}</span>
                       </li>
                     ))}
                   </ul>
@@ -676,12 +710,43 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
                 {nextSteps.map((step: string, idx: number) => (
                   <div key={idx} className="flex gap-4 p-3 bg-background/50 rounded-lg">
                     <span className="text-primary font-bold text-lg">{idx + 1}.</span>
-                    <span className="text-base">{step}</span>
+                    <span className="text-base">{renderWithReferences(step)}</span>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
+
+          {/* References Section */}
+          {references.length > 0 && (
+            <Card className="border-border bg-muted/20">
+              <CardHeader>
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-primary" />
+                  References
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ol className="space-y-2">
+                  {references.map((ref: any) => (
+                    <li key={ref.id} className="flex gap-3 text-sm">
+                      <span className="font-semibold text-primary min-w-[2rem]">[{ref.id}]</span>
+                      <div>
+                        <a
+                          href={ref.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline font-medium"
+                        >
+                          {ref.text}
+                        </a>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
 
