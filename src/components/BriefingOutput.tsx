@@ -1,9 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ClientData } from "./ClientInputForm";
 
 interface BriefingOutputProps {
@@ -12,6 +14,7 @@ interface BriefingOutputProps {
 }
 
 export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps) => {
+  const navigate = useNavigate();
   const [expandedSolution, setExpandedSolution] = useState<string | null>(null);
   
   const CircularProgress = ({ value, isTop }: { value: number; isTop: boolean }) => {
@@ -503,6 +506,18 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
           </ol>
         </CardContent>
       </Card>
+
+      {/* Contact & Schedule Button */}
+      <div className="flex justify-center pt-8">
+        <Button 
+          size="lg"
+          onClick={() => navigate('/contact', { state: { clientData } })}
+          className="gap-2"
+        >
+          Proceed to Contact & Schedule
+          <ArrowRight className="h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 };
