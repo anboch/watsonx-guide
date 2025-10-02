@@ -143,6 +143,42 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
         whyInteresting: "Client mentioned manual processes for compliance reporting consuming significant resources. watsonx.orchestrate can automate these workflows and integrate with existing core banking systems, freeing up staff for higher-value work.",
         whyNotInteresting: "Requires mapping and documenting existing processes before automation. ROI depends on volume of repetitive tasks and may take time to realize full benefits.",
         useCases: ["Automated compliance reporting", "Customer onboarding workflows", "Cross-system data synchronization"]
+      },
+      {
+        product: "watsonx Code Assistant",
+        compatibility: 78,
+        shortDescription: "AI-powered code generation and modernization",
+        reason: "Accelerates application development and helps modernize legacy code to cloud-native architectures",
+        whyInteresting: "With legacy core banking systems needing modernization and a $150M digital transformation budget, Code Assistant can speed up migration efforts and reduce technical debt while maintaining code quality.",
+        whyNotInteresting: "Requires developer adoption and training. Most valuable for large-scale modernization projects rather than small updates.",
+        useCases: ["Legacy code modernization", "Accelerated feature development", "Code documentation generation"]
+      },
+      {
+        product: "IBM Granite Models",
+        compatibility: 88,
+        shortDescription: "Enterprise-grade generative AI foundation models",
+        reason: "Purpose-built foundation models optimized for business use cases with strong performance and transparency",
+        whyInteresting: "Granite models offer enterprise-ready AI with better cost-performance ratios than generic models. Ideal for financial services where model transparency and explainability are critical for regulatory compliance.",
+        whyNotInteresting: "Newer to market compared to other foundation models. May require fine-tuning for highly specialized financial use cases.",
+        useCases: ["Document summarization", "Financial report generation", "Customer communication drafting"]
+      },
+      {
+        product: "IBM Cloud",
+        compatibility: 82,
+        shortDescription: "Hybrid cloud infrastructure and platform services",
+        reason: "Secure, scalable cloud infrastructure with strong financial services compliance and hybrid capabilities",
+        whyInteresting: "IBM Cloud's financial services-specific compliance frameworks (FS Cloud) align perfectly with regulatory requirements. Hybrid cloud approach allows gradual migration from legacy systems without full rip-and-replace.",
+        whyNotInteresting: "Migration to any cloud requires significant planning and change management. Existing cloud commitments may create multi-cloud complexity.",
+        useCases: ["Secure application hosting", "Hybrid cloud integration", "Disaster recovery"]
+      },
+      {
+        product: "IBM Security",
+        compatibility: 91,
+        shortDescription: "Enterprise security and threat intelligence",
+        reason: "Comprehensive security suite with AI-powered threat detection and zero-trust architecture capabilities",
+        whyInteresting: "Financial services are prime targets for cyber attacks. With limited real-time fraud detection capabilities mentioned as a pain point, IBM Security's AI-powered threat intelligence can significantly reduce risk exposure.",
+        whyNotInteresting: "May overlap with existing security investments. Requires integration with current security operations center (SOC) workflows.",
+        useCases: ["AI-powered threat detection", "Identity and access management", "Security orchestration and response"]
       }
     ],
     keyQuestions: [
@@ -320,7 +356,7 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       {/* IBM watsonx Solutions */}
       <div className="space-y-3">
         <h3 className="text-lg font-semibold">IBM watsonx Solution Mapping</h3>
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {briefing.solutionMapping.map((solution: any, idx: number) => {
             const isTop = solution.compatibility === maxCompatibility;
             const isExpanded = expandedSolution === solution.product;
