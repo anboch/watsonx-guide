@@ -1,15 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Building2, 
-  TrendingUp, 
-  Target, 
-  Lightbulb, 
-  MessageSquare,
-  Calendar,
-  Users
-} from "lucide-react";
 import { ClientData } from "./ClientInputForm";
 
 interface BriefingOutputProps {
@@ -18,25 +9,21 @@ interface BriefingOutputProps {
 }
 
 export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps) => {
-  // Mock data structure - will be replaced with AI-generated content
   const mockBriefing = {
     summary: `${clientData.clientName} is a ${clientData.companySize} company in the ${clientData.industry} sector. They are currently facing challenges with ${clientData.keyChallenge}.`,
     context: `As a key player in ${clientData.industry}, they are looking to modernize their operations and leverage AI to drive efficiency and innovation.`,
     opportunities: [
       {
         title: "Recent Leadership Changes",
-        description: "New CTO hired with background in AI transformation",
-        type: "Leadership"
+        description: "New CTO hired with background in AI transformation"
       },
       {
         title: "Market Expansion",
-        description: "Recent announcement of expansion into new markets",
-        type: "Growth"
+        description: "Recent announcement of expansion into new markets"
       },
       {
         title: "Technology Investment",
-        description: "Increased budget allocation for digital transformation",
-        type: "Investment"
+        description: "Increased budget allocation for digital transformation"
       }
     ],
     painPoints: [
@@ -48,18 +35,15 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
     solutionMapping: [
       {
         product: "watsonx.ai",
-        reason: "Foundation models for enterprise AI applications",
-        fit: "High"
+        reason: "Foundation models for enterprise AI applications"
       },
       {
         product: "watsonx.data",
-        reason: "Unified data lakehouse for breaking data silos",
-        fit: "High"
+        reason: "Unified data lakehouse for breaking data silos"
       },
       {
         product: "watsonx.governance",
-        reason: "AI governance and risk management",
-        fit: "Medium"
+        reason: "AI governance and risk management"
       }
     ],
     keyQuestions: [
@@ -76,63 +60,44 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Card className="shadow-card border-border/50">
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-3xl mb-2">{clientData.clientName}</CardTitle>
-              <div className="flex gap-2 flex-wrap">
-                <Badge variant="secondary" className="gap-1">
-                  <Building2 className="h-3 w-3" />
-                  {clientData.industry}
-                </Badge>
-                <Badge variant="secondary" className="gap-1">
-                  <Users className="h-3 w-3" />
-                  {clientData.companySize}
-                </Badge>
-                {clientData.meetingDate && (
-                  <Badge variant="secondary" className="gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {new Date(clientData.meetingDate).toLocaleDateString()}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
+      <div className="space-y-4">
+        <h2 className="text-3xl font-bold">{clientData.clientName}</h2>
+        <div className="flex gap-2 flex-wrap">
+          <Badge variant="secondary">{clientData.industry}</Badge>
+          <Badge variant="secondary">{clientData.companySize}</Badge>
+          {clientData.meetingDate && (
+            <Badge variant="secondary">
+              {new Date(clientData.meetingDate).toLocaleDateString()}
+            </Badge>
+          )}
+        </div>
+      </div>
+
+      <Separator />
 
       {/* Summary & Context */}
-      <Card className="shadow-card border-border/50">
+      <Card className="border-border">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-primary" />
-            Executive Summary & Context
-          </CardTitle>
+          <CardTitle className="text-lg">Summary</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-foreground leading-relaxed">{briefing.summary}</p>
-          <p className="text-muted-foreground leading-relaxed">{briefing.context}</p>
+        <CardContent className="space-y-3">
+          <p className="text-foreground">{briefing.summary}</p>
+          <p className="text-muted-foreground text-sm">{briefing.context}</p>
         </CardContent>
       </Card>
 
       {/* Opportunity Intelligence */}
-      <Card className="shadow-card border-border/50">
+      <Card className="border-border">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-accent" />
-            Opportunity Intelligence
-          </CardTitle>
+          <CardTitle className="text-lg">Opportunities</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {briefing.opportunities.map((opp: any, idx: number) => (
-              <div key={idx} className="p-4 bg-secondary/50 rounded-lg">
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-semibold">{opp.title}</h4>
-                  <Badge variant="outline">{opp.type}</Badge>
-                </div>
+              <div key={idx} className="space-y-1">
+                <h4 className="font-medium text-sm">{opp.title}</h4>
                 <p className="text-sm text-muted-foreground">{opp.description}</p>
+                {idx < briefing.opportunities.length - 1 && <Separator className="mt-4" />}
               </div>
             ))}
           </div>
@@ -140,48 +105,34 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       </Card>
 
       {/* Pain Points */}
-      <Card className="shadow-card border-border/50">
+      <Card className="border-border">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-destructive" />
-            Identified Pain Points
-          </CardTitle>
+          <CardTitle className="text-lg">Pain Points</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-3">
+          <ul className="space-y-2">
             {briefing.painPoints.map((point: string, idx: number) => (
-              <li key={idx} className="flex items-start gap-3">
-                <div className="mt-1 h-2 w-2 rounded-full bg-destructive flex-shrink-0" />
-                <span className="text-foreground">{point}</span>
+              <li key={idx} className="flex items-start gap-2 text-sm">
+                <span className="text-muted-foreground">•</span>
+                <span>{point}</span>
               </li>
             ))}
           </ul>
         </CardContent>
       </Card>
 
-      {/* IBM watsonx Solution Mapping */}
-      <Card className="shadow-card border-border/50">
+      {/* IBM watsonx Solutions */}
+      <Card className="border-border">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Lightbulb className="h-5 w-5 text-primary" />
-            IBM watsonx Solution Mapping
-          </CardTitle>
+          <CardTitle className="text-lg">Recommended Solutions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {briefing.solutionMapping.map((solution: any, idx: number) => (
-              <div key={idx}>
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-semibold text-primary">{solution.product}</h4>
-                  <Badge 
-                    variant={solution.fit === "High" ? "default" : "secondary"}
-                    className={solution.fit === "High" ? "bg-accent" : ""}
-                  >
-                    {solution.fit} Fit
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">{solution.reason}</p>
-                {idx < briefing.solutionMapping.length - 1 && <Separator />}
+              <div key={idx} className="space-y-1">
+                <h4 className="font-medium text-primary text-sm">{solution.product}</h4>
+                <p className="text-sm text-muted-foreground">{solution.reason}</p>
+                {idx < briefing.solutionMapping.length - 1 && <Separator className="mt-4" />}
               </div>
             ))}
           </div>
@@ -189,21 +140,16 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       </Card>
 
       {/* Key Questions */}
-      <Card className="shadow-card border-border/50">
+      <Card className="border-border">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-accent" />
-            Strategic Questions for the Meeting
-          </CardTitle>
+          <CardTitle className="text-lg">Key Questions</CardTitle>
         </CardHeader>
         <CardContent>
           <ol className="space-y-3">
             {briefing.keyQuestions.map((question: string, idx: number) => (
-              <li key={idx} className="flex items-start gap-3">
-                <span className="flex-shrink-0 flex items-center justify-center h-6 w-6 rounded-full bg-primary/10 text-primary font-semibold text-sm">
-                  {idx + 1}
-                </span>
-                <span className="text-foreground pt-0.5">{question}</span>
+              <li key={idx} className="flex gap-3 text-sm">
+                <span className="text-muted-foreground">{idx + 1}.</span>
+                <span>{question}</span>
               </li>
             ))}
           </ol>

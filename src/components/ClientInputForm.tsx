@@ -40,70 +40,70 @@ export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) =
   };
 
   return (
-    <Card className="shadow-card border-border/50">
+    <Card className="border-border">
       <CardHeader>
-        <CardTitle className="text-2xl">Client Intelligence Request</CardTitle>
-        <CardDescription className="text-base">
-          Enter client details to generate a comprehensive sales briefing
+        <CardTitle>Client Details</CardTitle>
+        <CardDescription>
+          Enter information to generate briefing
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="clientName">Client Name *</Label>
+            <Label htmlFor="clientName">Client Name</Label>
             <Input
               id="clientName"
               value={formData.clientName}
               onChange={(e) => handleChange("clientName", e.target.value)}
-              placeholder="e.g., Acme Corporation"
+              placeholder="Acme Corporation"
               required
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="industry">Industry *</Label>
+              <Label htmlFor="industry">Industry</Label>
               <Input
                 id="industry"
                 value={formData.industry}
                 onChange={(e) => handleChange("industry", e.target.value)}
-                placeholder="e.g., Financial Services"
+                placeholder="Financial Services"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="companySize">Company Size *</Label>
+              <Label htmlFor="companySize">Company Size</Label>
               <Input
                 id="companySize"
                 value={formData.companySize}
                 onChange={(e) => handleChange("companySize", e.target.value)}
-                placeholder="e.g., 5,000-10,000 employees"
+                placeholder="5,000-10,000 employees"
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="keyChallenge">Key Business Challenge *</Label>
+            <Label htmlFor="keyChallenge">Key Challenge</Label>
             <Textarea
               id="keyChallenge"
               value={formData.keyChallenge}
               onChange={(e) => handleChange("keyChallenge", e.target.value)}
-              placeholder="Describe the main challenge the client is facing..."
-              className="min-h-[100px]"
+              placeholder="Main business challenge..."
+              className="min-h-[100px] resize-none"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="currentSolutions">Current Solutions/Tech Stack</Label>
+            <Label htmlFor="currentSolutions">Current Solutions</Label>
             <Textarea
               id="currentSolutions"
               value={formData.currentSolutions}
               onChange={(e) => handleChange("currentSolutions", e.target.value)}
-              placeholder="List their current technology solutions and vendors..."
-              className="min-h-[80px]"
+              placeholder="Existing technology stack..."
+              className="min-h-[80px] resize-none"
             />
           </div>
 
@@ -119,18 +119,16 @@ export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) =
 
           <Button 
             type="submit" 
-            variant="hero" 
-            size="lg" 
             className="w-full"
             disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="animate-spin" />
-                Generating Briefing...
+                Generating...
               </>
             ) : (
-              "Generate Sales Briefing"
+              "Generate Briefing"
             )}
           </Button>
         </form>
