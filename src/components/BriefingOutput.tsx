@@ -146,7 +146,7 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       },
       {
         product: "watsonx Code Assistant",
-        compatibility: 78,
+        compatibility: 62,
         shortDescription: "AI-powered code generation and modernization",
         reason: "Accelerates application development and helps modernize legacy code to cloud-native architectures",
         whyInteresting: "With legacy core banking systems needing modernization and a $150M digital transformation budget, Code Assistant can speed up migration efforts and reduce technical debt while maintaining code quality.",
@@ -155,7 +155,7 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       },
       {
         product: "IBM Granite Models",
-        compatibility: 88,
+        compatibility: 40,
         shortDescription: "Enterprise-grade generative AI foundation models",
         reason: "Purpose-built foundation models optimized for business use cases with strong performance and transparency",
         whyInteresting: "Granite models offer enterprise-ready AI with better cost-performance ratios than generic models. Ideal for financial services where model transparency and explainability are critical for regulatory compliance.",
@@ -164,7 +164,7 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       },
       {
         product: "IBM Cloud",
-        compatibility: 82,
+        compatibility: 47,
         shortDescription: "Hybrid cloud infrastructure and platform services",
         reason: "Secure, scalable cloud infrastructure with strong financial services compliance and hybrid capabilities",
         whyInteresting: "IBM Cloud's financial services-specific compliance frameworks (FS Cloud) align perfectly with regulatory requirements. Hybrid cloud approach allows gradual migration from legacy systems without full rip-and-replace.",
@@ -173,7 +173,7 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       },
       {
         product: "IBM Security",
-        compatibility: 91,
+        compatibility: 75,
         shortDescription: "Enterprise security and threat intelligence",
         reason: "Comprehensive security suite with AI-powered threat detection and zero-trust architecture capabilities",
         whyInteresting: "Financial services are prime targets for cyber attacks. With limited real-time fraud detection capabilities mentioned as a pain point, IBM Security's AI-powered threat intelligence can significantly reduce risk exposure.",
