@@ -373,23 +373,23 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
               >
                 <Card className={`
                   transition-all duration-300 cursor-pointer
-                  ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 overflow-y-auto' : 'relative'}
+                  ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 overflow-y-auto' : 'relative min-h-[280px] flex flex-col'}
                   ${isTop && !isExpanded ? 'border-primary bg-primary/5' : 'border-border bg-card'}
                   ${!isTop && !isExpanded ? 'opacity-70' : ''}
                   hover:border-primary/50
                 `}>
-                  <CollapsibleTrigger className="w-full text-left">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1">
+                  <CollapsibleTrigger className="w-full text-left flex-1 flex flex-col">
+                    <CardHeader className="pb-3 flex-1 flex flex-col">
+                      <div className="flex items-start justify-between gap-2 mb-3">
+                        <div className="flex-1 min-h-[60px]">
                           <CardTitle className={`text-base mb-2 ${isTop ? 'text-primary' : ''}`}>
                             {solution.product}
                           </CardTitle>
-                          <p className="text-xs text-muted-foreground">{solution.shortDescription}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{solution.shortDescription}</p>
                         </div>
                         <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
                       </div>
-                      <div className="flex items-center justify-center mt-4">
+                      <div className="flex items-center justify-center mt-auto">
                         <CircularProgress value={solution.compatibility} isTop={isTop} />
                       </div>
                     </CardHeader>
