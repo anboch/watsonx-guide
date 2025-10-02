@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
@@ -13,12 +14,14 @@ interface ClientInputFormProps {
 export interface ClientData {
   clientName: string;
   clientInternalCode: string;
+  additionalContext?: string;
 }
 
 export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) => {
   const [formData, setFormData] = useState<ClientData>({
     clientName: "",
     clientInternalCode: "",
+    additionalContext: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -59,6 +62,17 @@ export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) =
               onChange={(e) => handleChange("clientInternalCode", e.target.value)}
               placeholder="Enter IBM internal client code"
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="additionalContext">Additional Context (Optional)</Label>
+            <Textarea
+              id="additionalContext"
+              value={formData.additionalContext || ""}
+              onChange={(e) => handleChange("additionalContext", e.target.value)}
+              placeholder="Add any relevant information about the client to guide the AI analysis..."
+              className="min-h-[100px]"
             />
           </div>
 
