@@ -13,6 +13,45 @@ interface BriefingOutputProps {
 
 export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps) => {
   const [expandedSolution, setExpandedSolution] = useState<string | null>(null);
+  
+  const CircularProgress = ({ value, isTop }: { value: number; isTop: boolean }) => {
+    const radius = 32;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference - (value / 100) * circumference;
+    
+    return (
+      <div className="relative w-20 h-20">
+        <svg className="w-20 h-20 transform -rotate-90">
+          <circle
+            cx="40"
+            cy="40"
+            r={radius}
+            stroke="currentColor"
+            strokeWidth="6"
+            fill="none"
+            className="text-muted/20"
+          />
+          <circle
+            cx="40"
+            cy="40"
+            r={radius}
+            stroke="currentColor"
+            strokeWidth="6"
+            fill="none"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            className={`transition-all duration-500 ${isTop ? 'text-primary' : 'text-muted-foreground/50'}`}
+            strokeLinecap="round"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className={`text-lg font-bold ${isTop ? 'text-primary' : 'text-muted-foreground'}`}>
+            {value}%
+          </span>
+        </div>
+      </div>
+    );
+  };
   // AI-generated mock data structure - shows what the AI will generate
   const mockBriefing = {
     crmData: {
@@ -124,6 +163,9 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
   };
 
   const briefing = briefingData || mockBriefing;
+  
+  // Find the highest compatibility score
+  const maxCompatibility = Math.max(...briefing.solutionMapping.map((s: any) => s.compatibility));
 
   return (
     <div className="space-y-6">
@@ -269,65 +311,85 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       {/* IBM watsonx Solutions */}
       <div className="space-y-3">
         <h3 className="text-lg font-semibold">IBM watsonx Solution Mapping</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {briefing.solutionMapping.map((solution: any, idx: number) => (
-            <Collapsible
-              key={idx}
-              open={expandedSolution === solution.product}
-              onOpenChange={(open) => setExpandedSolution(open ? solution.product : null)}
-            >
-              <Card className="border-border transition-all duration-300 hover:border-primary/50 cursor-pointer">
-                <CollapsibleTrigger className="w-full text-left">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1">
-                        <CardTitle className="text-base mb-2">{solution.product}</CardTitle>
-                        <p className="text-xs text-muted-foreground">{solution.shortDescription}</p>
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
+          {briefing.solutionMapping.map((solution: any, idx: number) => {
+            const isTop = solution.compatibility === maxCompatibility;
+            const isExpanded = expandedSolution === solution.product;
+            
+            return (
+              <Collapsible
+                key={idx}
+                open={isExpanded}
+                onOpenChange={(open) => setExpandedSolution(open ? solution.product : null)}
+              >
+                <Card className={`
+                  transition-all duration-300 cursor-pointer
+                  ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 overflow-y-auto' : 'relative'}
+                  ${isTop && !isExpanded ? 'border-primary bg-primary/5' : 'border-border bg-card'}
+                  ${!isTop && !isExpanded ? 'opacity-70' : ''}
+                  hover:border-primary/50
+                `}>
+                  <CollapsibleTrigger className="w-full text-left">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <CardTitle className={`text-base mb-2 ${isTop ? 'text-primary' : ''}`}>
+                            {solution.product}
+                          </CardTitle>
+                          <p className="text-xs text-muted-foreground">{solution.shortDescription}</p>
+                        </div>
+                        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
                       </div>
-                      <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${expandedSolution === solution.product ? 'rotate-180' : ''}`} />
-                    </div>
-                    <div className="flex items-center gap-2 mt-3">
-                      <div className="text-2xl font-bold text-primary">{solution.compatibility}%</div>
-                      <div className="text-xs text-muted-foreground">compatibility</div>
-                    </div>
-                  </CardHeader>
-                </CollapsibleTrigger>
-                
-                <CollapsibleContent>
-                  <CardContent className="pt-0 space-y-4">
-                    <Separator />
-                    
-                    <div>
-                      <h5 className="text-xs font-medium text-muted-foreground mb-1">Overview</h5>
-                      <p className="text-sm">{solution.reason}</p>
-                    </div>
-                    
-                    <div>
-                      <h5 className="text-xs font-medium text-primary mb-1">Why Interesting</h5>
-                      <p className="text-sm text-muted-foreground">{solution.whyInteresting}</p>
-                    </div>
-                    
-                    <div>
-                      <h5 className="text-xs font-medium text-muted-foreground mb-1">Considerations</h5>
-                      <p className="text-sm text-muted-foreground">{solution.whyNotInteresting}</p>
-                    </div>
-                    
-                    <div>
-                      <h5 className="text-xs font-medium text-muted-foreground mb-2">Key Use Cases</h5>
-                      <div className="flex flex-wrap gap-1.5">
-                        {solution.useCases.map((useCase: string, ucIdx: number) => (
-                          <Badge key={ucIdx} variant="outline" className="text-xs">
-                            {useCase}
-                          </Badge>
-                        ))}
+                      <div className="flex items-center justify-center mt-4">
+                        <CircularProgress value={solution.compatibility} isTop={isTop} />
                       </div>
-                    </div>
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
-          ))}
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  
+                  <CollapsibleContent>
+                    <CardContent className="pt-0 space-y-4">
+                      <Separator />
+                      
+                      <div>
+                        <h5 className="text-xs font-medium text-muted-foreground mb-1">Overview</h5>
+                        <p className="text-sm">{solution.reason}</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-xs font-medium text-primary mb-1">Why Interesting</h5>
+                        <p className="text-sm text-muted-foreground">{solution.whyInteresting}</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-xs font-medium text-muted-foreground mb-1">Considerations</h5>
+                        <p className="text-sm text-muted-foreground">{solution.whyNotInteresting}</p>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-xs font-medium text-muted-foreground mb-2">Key Use Cases</h5>
+                        <div className="flex flex-wrap gap-1.5">
+                          {solution.useCases.map((useCase: string, ucIdx: number) => (
+                            <Badge key={ucIdx} variant="outline" className="text-xs">
+                              {useCase}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
+            );
+          })}
         </div>
+        
+        {/* Backdrop when expanded */}
+        {expandedSolution && (
+          <div 
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+            onClick={() => setExpandedSolution(null)}
+          />
+        )}
       </div>
 
       {/* Key Questions */}
