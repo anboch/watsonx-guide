@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 
 interface ClientInputFormProps {
@@ -13,21 +13,13 @@ interface ClientInputFormProps {
 
 export interface ClientData {
   clientName: string;
-  industry: string;
-  companySize: string;
-  keyChallenge: string;
-  currentSolutions: string;
-  meetingDate: string;
+  crmIntegration: string;
 }
 
 export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) => {
   const [formData, setFormData] = useState<ClientData>({
     clientName: "",
-    industry: "",
-    companySize: "",
-    keyChallenge: "",
-    currentSolutions: "",
-    meetingDate: "",
+    crmIntegration: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,9 +34,9 @@ export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) =
   return (
     <Card className="border-border">
       <CardHeader>
-        <CardTitle>Client Details</CardTitle>
+        <CardTitle>Generate Client Briefing</CardTitle>
         <CardDescription>
-          Enter information to generate briefing
+          AI will analyze and generate comprehensive intelligence
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -55,66 +47,29 @@ export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) =
               id="clientName"
               value={formData.clientName}
               onChange={(e) => handleChange("clientName", e.target.value)}
-              placeholder="Acme Corporation"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="industry">Industry</Label>
-              <Input
-                id="industry"
-                value={formData.industry}
-                onChange={(e) => handleChange("industry", e.target.value)}
-                placeholder="Financial Services"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="companySize">Company Size</Label>
-              <Input
-                id="companySize"
-                value={formData.companySize}
-                onChange={(e) => handleChange("companySize", e.target.value)}
-                placeholder="5,000-10,000 employees"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="keyChallenge">Key Challenge</Label>
-            <Textarea
-              id="keyChallenge"
-              value={formData.keyChallenge}
-              onChange={(e) => handleChange("keyChallenge", e.target.value)}
-              placeholder="Main business challenge..."
-              className="min-h-[100px] resize-none"
+              placeholder="Enter client company name"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="currentSolutions">Current Solutions</Label>
-            <Textarea
-              id="currentSolutions"
-              value={formData.currentSolutions}
-              onChange={(e) => handleChange("currentSolutions", e.target.value)}
-              placeholder="Existing technology stack..."
-              className="min-h-[80px] resize-none"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="meetingDate">Meeting Date</Label>
-            <Input
-              id="meetingDate"
-              type="date"
-              value={formData.meetingDate}
-              onChange={(e) => handleChange("meetingDate", e.target.value)}
-            />
+            <Label htmlFor="crmIntegration">CRM Integration</Label>
+            <Select
+              value={formData.crmIntegration}
+              onValueChange={(value) => handleChange("crmIntegration", value)}
+            >
+              <SelectTrigger id="crmIntegration">
+                <SelectValue placeholder="Select CRM system" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="salesforce">Salesforce</SelectItem>
+                <SelectItem value="hubspot">HubSpot</SelectItem>
+                <SelectItem value="dynamics">Microsoft Dynamics</SelectItem>
+                <SelectItem value="zoho">Zoho CRM</SelectItem>
+                <SelectItem value="pipedrive">Pipedrive</SelectItem>
+                <SelectItem value="none">No CRM Integration</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <Button 
@@ -125,7 +80,7 @@ export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) =
             {isLoading ? (
               <>
                 <Loader2 className="animate-spin" />
-                Generating...
+                Analyzing...
               </>
             ) : (
               "Generate Briefing"
