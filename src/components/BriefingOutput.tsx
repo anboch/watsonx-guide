@@ -214,10 +214,20 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
 
   const briefing = clientData.briefingData || mockBriefing;
   
+  // Safety checks - ensure all required arrays exist
+  const solutionMapping = briefing.solutionMapping || [];
+  const opportunities = briefing.opportunities || [];
+  const painPoints = briefing.painPoints || [];
+  const keyQuestions = briefing.keyQuestions || [];
+  const nextSteps = briefing.nextSteps || [];
+  const pastInteractions = briefing.crmData?.pastInteractions || [];
+  
   // Find the highest compatibility score and top solutions
-  const maxCompatibility = Math.max(...briefing.solutionMapping.map((s: any) => s.compatibility));
-  const topSolution = briefing.solutionMapping.find((s: any) => s.compatibility === maxCompatibility);
-  const sortedSolutions = [...briefing.solutionMapping].sort((a: any, b: any) => b.compatibility - a.compatibility);
+  const maxCompatibility = solutionMapping.length > 0 
+    ? Math.max(...solutionMapping.map((s: any) => s.compatibility))
+    : 0;
+  const topSolution = solutionMapping.find((s: any) => s.compatibility === maxCompatibility) || { product: "N/A", compatibility: 0 };
+  const sortedSolutions = [...solutionMapping].sort((a: any, b: any) => b.compatibility - a.compatibility);
   const topThreeSolutions = sortedSolutions.slice(0, 3);
   const remainingSolutions = sortedSolutions.slice(3);
 
@@ -307,11 +317,11 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
               <Collapsible>
                 <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
                   <ChevronDown className="h-4 w-4" />
-                  Past Interactions ({briefing.crmData.pastInteractions.length})
+                  Past Interactions ({pastInteractions.length})
                 </CollapsibleTrigger>
                 <CollapsibleContent className="mt-3">
                   <div className="space-y-3">
-                    {briefing.crmData.pastInteractions.map((interaction: any, idx: number) => (
+                    {pastInteractions.map((interaction: any, idx: number) => (
                       <div key={idx} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
                         <div className="text-sm text-muted-foreground whitespace-nowrap">{interaction.date}</div>
                         <div>
@@ -385,7 +395,7 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {briefing.opportunities.map((opp: any, idx: number) => (
+                {opportunities.map((opp: any, idx: number) => (
                   <div key={idx} className="p-4 bg-muted/30 rounded-lg space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <h4 className="font-semibold text-base">{opp.title}</h4>
@@ -408,7 +418,7 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
-                {briefing.painPoints.map((point: string, idx: number) => (
+                {painPoints.map((point: string, idx: number) => (
                   <li key={idx} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
                     <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                     <span className="text-base">{point}</span>
@@ -607,7 +617,7 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {briefing.keyQuestions.map((question: string, idx: number) => (
+                {keyQuestions.map((question: string, idx: number) => (
                   <div key={idx} className="flex gap-4 p-3 bg-muted/30 rounded-lg">
                     <span className="text-primary font-bold text-lg">{idx + 1}.</span>
                     <span className="text-base">{question}</span>
@@ -663,7 +673,7 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {briefing.nextSteps.map((step: string, idx: number) => (
+                {nextSteps.map((step: string, idx: number) => (
                   <div key={idx} className="flex gap-4 p-3 bg-background/50 rounded-lg">
                     <span className="text-primary font-bold text-lg">{idx + 1}.</span>
                     <span className="text-base">{step}</span>

@@ -25,67 +25,59 @@ You must return a valid JSON object with detailed, realistic information based o
 
 The JSON structure must be:
 {
-  "companyInfo": {
-    "name": "string",
-    "industry": "string",
-    "size": "string",
-    "location": "string"
-  },
-  "executiveSummary": "string (2-3 paragraphs)",
   "crmData": {
+    "contactName": "string",
+    "contactEmail": "string",
+    "contactTitle": "string",
+    "pastInteractions": [
+      {
+        "date": "string (YYYY-MM-DD)",
+        "type": "string (Meeting|Email|Conference)",
+        "summary": "string"
+      }
+    ],
+    "accountStatus": "string",
+    "lastContactDate": "string (YYYY-MM-DD)",
     "accountOwner": "string",
-    "lastInteraction": "string (date)",
-    "currentStatus": "string",
-    "totalValue": "string"
+    "region": "string"
   },
-  "opportunityIntelligence": [
+  "companyInfo": {
+    "industry": "string",
+    "companySize": "string",
+    "headquarters": "string",
+    "revenue": "string",
+    "founded": "string"
+  },
+  "summary": "string (2-3 paragraphs describing the company)",
+  "context": "string (2-3 paragraphs about their strategic situation)",
+  "opportunities": [
     {
       "title": "string",
       "description": "string",
-      "priority": "High" | "Medium" | "Low",
-      "estimatedValue": "string"
+      "date": "string"
     }
   ],
-  "painPoints": [
+  "painPoints": ["string"],
+  "solutionMapping": [
     {
-      "category": "string",
-      "description": "string",
-      "impact": "High" | "Medium" | "Low"
-    }
-  ],
-  "solutions": [
-    {
-      "id": "string",
-      "name": "string",
-      "description": "string",
+      "product": "string (IBM watsonx product name)",
       "compatibility": number (0-100),
-      "benefits": ["string"],
-      "implementation": "string"
+      "shortDescription": "string",
+      "reason": "string",
+      "whyInteresting": "string",
+      "whyNotInteresting": "string",
+      "useCases": ["string"]
     }
   ],
   "keyQuestions": ["string"],
-  "competitiveIntelligence": {
-    "currentVendors": ["string"],
-    "competitiveAdvantages": ["string"],
-    "risks": ["string"]
+  "competitiveIntel": {
+    "competitors": ["string"],
+    "insights": ["string"]
   },
-  "nextSteps": [
-    {
-      "action": "string",
-      "timeline": "string",
-      "owner": "string"
-    }
-  ],
-  "pastInteractions": [
-    {
-      "date": "string",
-      "type": "string",
-      "summary": "string"
-    }
-  ]
+  "nextSteps": ["string"]
 }
 
-Generate realistic, detailed information. Use specific IBM watsonx products in the solutions section.`;
+Generate realistic, detailed information. Include at least 6-8 IBM watsonx solution options in solutionMapping with varying compatibility scores (55-95).`;
 
     const userPrompt = `Generate a comprehensive sales briefing for:
 Company: ${clientName}
