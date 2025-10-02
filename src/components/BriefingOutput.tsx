@@ -134,6 +134,15 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
         whyInteresting: "As a financial services company, regulatory compliance is non-negotiable. The Q3 2025 compliance deadline makes this extremely timely. watsonx.governance provides audit trails and bias detection essential for banking AI applications.",
         whyNotInteresting: "May be seen as overhead if AI adoption is limited. Requires clear governance policies and processes to be defined upfront.",
         useCases: ["Model risk management", "Compliance monitoring", "Bias detection in lending decisions"]
+      },
+      {
+        product: "watsonx.orchestrate",
+        compatibility: 85,
+        shortDescription: "AI-powered automation and workflow orchestration",
+        reason: "Automates repetitive business processes and connects disparate systems to improve operational efficiency",
+        whyInteresting: "Client mentioned manual processes for compliance reporting consuming significant resources. watsonx.orchestrate can automate these workflows and integrate with existing core banking systems, freeing up staff for higher-value work.",
+        whyNotInteresting: "Requires mapping and documenting existing processes before automation. ROI depends on volume of repetitive tasks and may take time to realize full benefits.",
+        useCases: ["Automated compliance reporting", "Customer onboarding workflows", "Cross-system data synchronization"]
       }
     ],
     keyQuestions: [
