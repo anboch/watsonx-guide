@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { MessageSquare, X, Upload, Send, FileText, Image as ImageIcon } from "lucide-react";
+import { MessageSquare, X, Send, Plus, FileText, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 interface Message {
@@ -14,8 +14,8 @@ interface Message {
 
 export const AIChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("granite");
   const [inputMessage, setInputMessage] = useState("");
+  const [uploadMenuOpen, setUploadMenuOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -23,6 +23,16 @@ export const AIChatbot = () => {
       timestamp: new Date(),
     },
   ]);
+
+  const handleUploadOption = (type: 'image' | 'document' | 'link') => {
+    // Mock upload handler - in production this would trigger file pickers or link input
+    setMessages(prev => [...prev, {
+      role: "assistant",
+      content: `Ready to upload ${type}. This is a mock - in production, this would open a ${type} picker.`,
+      timestamp: new Date(),
+    }]);
+    setUploadMenuOpen(false);
+  };
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
@@ -79,51 +89,6 @@ export const AIChatbot = () => {
           </Button>
         </div>
 
-        {/* Model Selector */}
-        <div className="p-4 border-b bg-muted/30">
-          <label className="text-sm font-medium mb-2 block">AI Model</label>
-          <Select value={selectedModel} onValueChange={setSelectedModel}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="granite">IBM Granite 3.1</SelectItem>
-              <SelectItem value="llama">Meta Llama 3.3</SelectItem>
-              <SelectItem value="mistral">Mistral 7B</SelectItem>
-              <SelectItem value="phi">Microsoft Phi-4</SelectItem>
-              <SelectItem value="gemma">Google Gemma 2</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* File Upload Area */}
-        <div className="p-4 border-b">
-          <label className="text-sm font-medium mb-2 block">Upload Documents</label>
-          <div className="border-2 border-dashed rounded-lg p-4 hover:border-primary/50 transition-colors cursor-pointer">
-            <div className="flex flex-col items-center gap-2 text-muted-foreground">
-              <Upload className="h-6 w-6" />
-              <p className="text-xs text-center">
-                Drop files here or click to upload
-                <br />
-                <span className="text-[10px]">PDF, DOCX, PNG, JPG</span>
-              </p>
-            </div>
-          </div>
-          
-          {/* Mock uploaded files */}
-          <div className="mt-3 space-y-2">
-            <div className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm">
-              <FileText className="h-4 w-4 text-primary" />
-              <span className="flex-1 truncate">Allstate_Report_2024.pdf</span>
-              <X className="h-3 w-3 cursor-pointer" />
-            </div>
-            <div className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm">
-              <ImageIcon className="h-4 w-4 text-primary" />
-              <span className="flex-1 truncate">market_analysis.png</span>
-              <X className="h-3 w-3 cursor-pointer" />
-            </div>
-          </div>
-        </div>
 
         {/* Chat Messages */}
         <ScrollArea className="flex-1 p-4">
@@ -157,11 +122,47 @@ export const AIChatbot = () => {
         {/* Input Area */}
         <div className="p-4 border-t">
           <div className="flex gap-2">
+            <Popover open={uploadMenuOpen} onOpenChange={setUploadMenuOpen}>
+              <PopoverTrigger asChild>
+                <Button size="icon" variant="outline">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-48 p-2" align="start">
+                <div className="flex flex-col gap-1">
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => handleUploadOption('image')}
+                  >
+                    <ImageIcon className="mr-2 h-4 w-4" />
+                    Upload Image
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => handleUploadOption('document')}
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Upload Document
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => handleUploadOption('link')}
+                  >
+                    <LinkIcon className="mr-2 h-4 w-4" />
+                    Add Link
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
             <Input
               placeholder="Ask anything about your meeting..."
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+              className="flex-1"
             />
             <Button size="icon" onClick={handleSendMessage}>
               <Send className="h-4 w-4" />
