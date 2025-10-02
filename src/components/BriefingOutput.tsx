@@ -55,158 +55,159 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       </div>
     );
   };
-  // AI-generated mock data structure - shows what the AI will generate
+  // AI-generated mock data structure - filled with ELITE, realistic data for Allstate
   const mockBriefing = {
     crmData: {
-      contactName: "Sarah Chen",
-      contactEmail: "sarah.chen@example.com",
-      contactTitle: "Chief Technology Officer",
+      contactName: "Elena Petrova",
+      contactEmail: "elena.petrova@allstate.com",
+      contactTitle: "Chief Information & Digital Officer (CIDO)",
       pastInteractions: [
-        { date: "2024-09-15", type: "Meeting", summary: "Initial AI strategy discussion" },
-        { date: "2024-08-22", type: "Email", summary: "Shared watsonx case studies" },
-        { date: "2024-07-10", type: "Conference", summary: "Met at IBM Think conference" }
+        { date: "2024-10-02", type: "Meeting", summary: "Discovery call on modernizing claims processing and fraud detection." },
+        { date: "2024-09-18", type: "Email", summary: "Shared IBM's 'AI in Insurance' whitepaper and watsonx.governance case study." },
+        { date: "2024-08-05", type: "Conference", summary: "Met at the IBM Quantum Summit; discussed future of risk modeling." }
       ],
-      accountStatus: "Active",
-      lastContactDate: "2024-09-15",
-      accountOwner: "John Smith",
+      accountStatus: "Strategic Prospect",
+      lastContactDate: "2024-10-02",
+      accountOwner: "David Chen",
       region: "North America"
     },
     companyInfo: {
-      industry: "Financial Services",
-      companySize: "5,000-10,000 employees",
-      headquarters: "New York, NY",
-      revenue: "$2.1B annually",
-      founded: "1998"
+      industry: "Insurance (Property & Casualty)",
+      companySize: "50,000+ employees",
+      headquarters: "Northbrook, Illinois",
+      revenue: "$57.1B annually",
+      founded: "1931"
     },
-    summary: `${clientData.clientName} is a leading financial services provider with a strong presence in the North American market. The company has been experiencing rapid growth and is actively investing in digital transformation initiatives to maintain competitive advantage.`,
-    context: `Recent analyst reports indicate the company is focusing on modernizing their technology infrastructure and exploring AI capabilities to enhance customer experience and operational efficiency. They have publicly stated commitments to innovation in their latest earnings call.`,
+    summary: `Allstate is a titan in the U.S. property and casualty insurance industry, renowned for its 'You're in good hands' slogan. As a market leader, they possess a vast repository of customer and claims data, representing a massive, untapped asset for hyper-personalization and operational efficiency.`,
+    context: `The company is under significant pressure from agile, digital-first insurtech competitors. Their strategic imperative, as outlined in recent earnings calls, is to accelerate their digital transformation by leveraging AI and data analytics to enhance customer experience, optimize claims processing, and develop more sophisticated risk models.`,
     opportunities: [
       {
-        title: "New CTO Appointment",
-        description: "Hired Sarah Chen as CTO in Q4 2024, formerly from a major cloud provider with strong AI background",
-        date: "3 months ago"
+        title: "New Chief Data Officer Hired",
+        description: "Appointed Dr. Anil Bhatt, formerly Head of Data Science at a major tech firm, signaling a strong push towards an data-driven culture.",
+        date: "4 months ago"
       },
       {
-        title: "Digital Transformation Initiative",
-        description: "Announced $150M investment in technology modernization at recent investor conference",
+        title: "'Drivewise 2.0' Initiative",
+        description: "Announced major investment to enhance their telematics program (Drivewise) to incorporate new data sources for usage-based insurance.",
         date: "2 months ago"
       },
       {
-        title: "Regulatory Compliance Deadline",
-        description: "Must comply with new financial regulations by Q3 2025, requiring system updates",
-        date: "Upcoming"
+        title: "Competitive Pressure from Insurtechs",
+        description: "Losing market share in the under-30 demographic to digital-native insurers like Lemonade and Root Insurance.",
+        date: "Ongoing"
       },
       {
-        title: "Strategic Partnership",
-        description: "Recently partnered with leading fintech to expand digital offerings",
-        date: "1 month ago"
+        title: "Regulatory Scrutiny on AI Bias",
+        description: "New state-level regulations are emerging around the use of AI in premium pricing and claims adjudication, requiring transparent and fair models.",
+        date: "Upcoming"
       }
     ],
     painPoints: [
-      "Legacy core banking systems causing integration challenges",
-      "Data silos across departments preventing unified customer view",
-      "Manual processes for compliance reporting consuming significant resources",
-      "Limited real-time analytics capabilities for fraud detection",
-      "Aging infrastructure unable to support modern AI workloads",
-      "Customer experience inconsistent across digital channels"
+      "Legacy claims processing systems on mainframes result in slow cycle times and high operational costs.",
+      "Difficulty in detecting sophisticated, multi-channel fraud patterns in real-time.",
+      "Inconsistent customer experience between captive agents, the website, and the mobile app.",
+      "Underutilization of vast telematics and customer data for predictive risk modeling.",
+      "Long cycle times for underwriting complex commercial policies, leading to lost business.",
+      "Ensuring AI model fairness and avoiding demographic bias in pricing and claims decisions is a major compliance risk."
     ],
     solutionMapping: [
       {
         product: "watsonx.ai",
-        compatibility: 92,
-        shortDescription: "AI foundation models for intelligent automation",
-        reason: "Foundation models can power intelligent customer service, fraud detection, and personalized financial recommendations",
-        whyInteresting: "The client's new CTO has a strong AI background and they've announced a $150M digital transformation initiative. Their current manual fraud detection processes and inconsistent customer experience across channels are perfect use cases for watsonx.ai's capabilities.",
-        whyNotInteresting: "Integration with legacy core banking systems may require significant effort. The organization may need to build internal AI expertise before fully leveraging advanced capabilities.",
-        useCases: ["Conversational AI for customer support", "Fraud pattern detection", "Document analysis for loan processing"]
-      },
-      {
-        product: "watsonx.data",
-        compatibility: 88,
-        shortDescription: "Unified data lakehouse for analytics",
-        reason: "Unified data lakehouse architecture to break down silos and enable real-time analytics across all customer touchpoints",
-        whyInteresting: "Client explicitly mentioned data silos as a major pain point preventing unified customer view. With upcoming regulatory compliance deadline in Q3 2025, having a unified data platform is critical for automated reporting.",
-        whyNotInteresting: "Requires organizational change management to break down departmental data ownership barriers. Migration from existing data warehouses may be time-consuming.",
-        useCases: ["360-degree customer view", "Real-time risk analytics", "Regulatory reporting automation"]
+        compatibility: 95,
+        shortDescription: "Enterprise AI studio for foundation models and ML",
+        reason: "Powers automated claims processing, sophisticated fraud detection, and personalized customer service bots, directly addressing core operational inefficiencies.",
+        whyInteresting: "Allstate's massive, proprietary dataset is a perfect match for fine-tuning foundation models. This can create a significant competitive moat against insurtechs by enabling hyper-personalized policies and near-instant claim approvals for common cases.",
+        whyNotInteresting: "Requires high-quality, clean data. The initial effort to integrate with legacy mainframe systems for claims data could be substantial.",
+        useCases: ["Automated damage assessment from images", "Real-time fraud pattern detection", "Personalized policy recommendations"]
       },
       {
         product: "watsonx.governance",
-        compatibility: 95,
-        shortDescription: "AI governance and compliance",
-        reason: "Critical for financial services to ensure AI models meet regulatory requirements and maintain audit trails",
-        whyInteresting: "As a financial services company, regulatory compliance is non-negotiable. The Q3 2025 compliance deadline makes this extremely timely. watsonx.governance provides audit trails and bias detection essential for banking AI applications.",
-        whyNotInteresting: "May be seen as overhead if AI adoption is limited. Requires clear governance policies and processes to be defined upfront.",
-        useCases: ["Model risk management", "Compliance monitoring", "Bias detection in lending decisions"]
+        compatibility: 93,
+        shortDescription: "Govern, manage, and monitor AI activities",
+        reason: "Essential for a regulated industry like insurance to ensure AI models are fair, transparent, and compliant with emerging regulations.",
+        whyInteresting: "Directly mitigates the huge business risk of biased AI models in pricing and claims. This is a critical differentiator that builds trust with both customers and regulators, turning compliance from a cost center into a competitive advantage.",
+        whyNotInteresting: "The value is most apparent once AI models are in production; may be seen as a 'Day 2' problem if they are early in their AI journey.",
+        useCases: ["Model risk management", "Bias and drift detection in premium pricing", "Auditable AI decision trails for claims"]
       },
       {
-        product: "watsonx.orchestrate",
-        compatibility: 85,
-        shortDescription: "AI-powered automation and workflow orchestration",
-        reason: "Automates repetitive business processes and connects disparate systems to improve operational efficiency",
-        whyInteresting: "Client mentioned manual processes for compliance reporting consuming significant resources. watsonx.orchestrate can automate these workflows and integrate with existing core banking systems, freeing up staff for higher-value work.",
-        whyNotInteresting: "Requires mapping and documenting existing processes before automation. ROI depends on volume of repetitive tasks and may take time to realize full benefits.",
-        useCases: ["Automated compliance reporting", "Customer onboarding workflows", "Cross-system data synchronization"]
+        product: "watsonx.data",
+        compatibility: 90,
+        shortDescription: "Fit-for-purpose data store built on a data lakehouse",
+        reason: "Breaks down data silos between claims, underwriting, and customer data systems to create a unified view for advanced analytics.",
+        whyInteresting: "Unlocks the full potential of their telematics (Drivewise) and customer data. A unified data platform is the foundational layer required to achieve the sophisticated risk modeling and 360-degree customer view they need to compete.",
+        whyNotInteresting: "Requires significant organizational change to move away from siloed data ownership. Data migration and governance setup is a major undertaking.",
+        useCases: ["Unified customer data platform", "Advanced actuarial and risk analytics", "Real-time data for usage-based insurance"]
       },
       {
         product: "watsonx Code Assistant",
-        compatibility: 62,
-        shortDescription: "AI-powered code generation and modernization",
-        reason: "Accelerates application development and helps modernize legacy code to cloud-native architectures",
-        whyInteresting: "With legacy core banking systems needing modernization and a $150M digital transformation budget, Code Assistant can speed up migration efforts and reduce technical debt while maintaining code quality.",
-        whyNotInteresting: "Requires developer adoption and training. Most valuable for large-scale modernization projects rather than small updates.",
-        useCases: ["Legacy code modernization", "Accelerated feature development", "Code documentation generation"]
+        compatibility: 78,
+        shortDescription: "Generative AI for code modernization",
+        reason: "Accelerates the modernization of legacy COBOL applications from their mainframe systems to cloud-native architectures.",
+        whyInteresting: "Directly addresses the core pain point of their aging mainframe infrastructure. Modernizing the claims system is their biggest technical hurdle, and Code Assistant can de-risk this process and dramatically reduce migration time and cost.",
+        whyNotInteresting: "Requires buy-in from development teams and a clear modernization strategy. It's a tool, not a complete solution for organizational change.",
+        useCases: ["COBOL to Java modernization", "Automated unit test generation", "Natural language to code for new features"]
       },
       {
-        product: "IBM Granite Models",
-        compatibility: 40,
-        shortDescription: "Enterprise-grade generative AI foundation models",
-        reason: "Purpose-built foundation models optimized for business use cases with strong performance and transparency",
-        whyInteresting: "Granite models offer enterprise-ready AI with better cost-performance ratios than generic models. Ideal for financial services where model transparency and explainability are critical for regulatory compliance.",
-        whyNotInteresting: "Newer to market compared to other foundation models. May require fine-tuning for highly specialized financial use cases.",
-        useCases: ["Document summarization", "Financial report generation", "Customer communication drafting"]
-      },
-      {
-        product: "IBM Cloud",
-        compatibility: 47,
-        shortDescription: "Hybrid cloud infrastructure and platform services",
-        reason: "Secure, scalable cloud infrastructure with strong financial services compliance and hybrid capabilities",
-        whyInteresting: "IBM Cloud's financial services-specific compliance frameworks (FS Cloud) align perfectly with regulatory requirements. Hybrid cloud approach allows gradual migration from legacy systems without full rip-and-replace.",
-        whyNotInteresting: "Migration to any cloud requires significant planning and change management. Existing cloud commitments may create multi-cloud complexity.",
-        useCases: ["Secure application hosting", "Hybrid cloud integration", "Disaster recovery"]
+        product: "watsonx.orchestrate",
+        compatibility: 82,
+        shortDescription: "AI-powered automation for business processes",
+        reason: "Automates complex, multi-step workflows like underwriting and customer onboarding, connecting legacy and modern systems.",
+        whyInteresting: "Can provide immediate ROI by reducing manual work in the underwriting process for commercial policies, a known bottleneck. It allows them to connect their mainframe systems to modern services without a full rip-and-replace.",
+        whyNotInteresting: "Requires clear documentation of existing business processes, which may not exist for older, complex workflows.",
+        useCases: ["Automated underwriting workflows", "New customer onboarding", "Claims processing orchestration"]
       },
       {
         product: "IBM Security",
         compatibility: 75,
-        shortDescription: "Enterprise security and threat intelligence",
-        reason: "Comprehensive security suite with AI-powered threat detection and zero-trust architecture capabilities",
-        whyInteresting: "Financial services are prime targets for cyber attacks. With limited real-time fraud detection capabilities mentioned as a pain point, IBM Security's AI-powered threat intelligence can significantly reduce risk exposure.",
-        whyNotInteresting: "May overlap with existing security investments. Requires integration with current security operations center (SOC) workflows.",
-        useCases: ["AI-powered threat detection", "Identity and access management", "Security orchestration and response"]
+        shortDescription: "AI-powered threat detection and response",
+        reason: "Protects sensitive customer PII and financial data from increasingly sophisticated cyber threats.",
+        whyInteresting: "As a high-profile financial institution, they are a prime target for cyberattacks. IBM Security's AI-powered Guardium and QRadar products can secure their data both on-premise and in their future hybrid cloud environment.",
+        whyNotInteresting: "Allstate already has a mature security posture; this would need to integrate with or replace existing solutions, which can be complex.",
+        useCases: ["Sensitive data discovery and protection", "AI-driven threat intelligence", "Insider threat detection"]
+      },
+      {
+        product: "IBM Cloud for Financial Services",
+        compatibility: 65,
+        shortDescription: "Public cloud with built-in security and compliance",
+        reason: "Provides a compliant, secure landing zone for modernized applications, designed specifically for regulated industries.",
+        whyInteresting: "De-risks their move to the cloud by providing a platform with pre-built controls mapped to financial and insurance regulations. This accelerates their transformation timeline significantly compared to building on a generic public cloud.",
+        whyNotInteresting: "They likely have existing relationships with other cloud providers (AWS, Azure), creating a multi-cloud management challenge.",
+        useCases: ["Secure hosting for modernized claims app", "Compliant environment for AI workloads", "Hybrid cloud disaster recovery"]
+      },
+      {
+        product: "IBM Granite Models",
+        compatibility: 55,
+        shortDescription: "Enterprise-grade generative AI models",
+        reason: "Provides transparent, auditable, and indemnified foundation models for building enterprise-grade generative AI applications.",
+        whyInteresting: "For a risk-averse company like Allstate, using a model from an unknown source is a non-starter. IBM's commitment to transparency and indemnification for Granite is a powerful differentiator for building trusted AI solutions.",
+        whyNotInteresting: "This is a component of the watsonx.ai platform rather than a standalone solution for them. The value is in the entire platform.",
+        useCases: ["Summarizing complex claims documents", "Drafting customer communications", "Internal knowledge base Q&A"]
       }
     ],
     keyQuestions: [
-      "What are your biggest pain points with your current core banking systems?",
-      "How are you currently handling data integration across departments?",
-      "What compliance and regulatory challenges are keeping you up at night?",
-      "Where do you see the biggest opportunity for AI to impact your business?",
-      "What's your timeline for the digital transformation initiative?",
-      "How is your new CTO thinking about AI strategy for the organization?",
-      "What criteria are you using to evaluate technology partners?",
-      "How do you measure success for technology investments?"
+      "How are you planning to leverage your vast telematics data from Drivewise beyond simple premium discounts?",
+      "As you adopt more AI in underwriting and claims, how is your team approaching model governance and regulatory compliance?",
+      "What is the biggest technical and business bottleneck in your current claims processing workflow?",
+      "How does your strategy for modernizing mainframe applications align with your goals for faster product innovation?",
+      "With the appointment of Dr. Bhatt, what are the top 1-2 priorities for establishing a data-driven culture at Allstate?",
+      "How are you ensuring a consistent, high-quality customer experience across your agent network and digital channels?",
+      "What criteria are most important when evaluating an enterprise partner for your AI and data transformation journey?",
+      "How do you measure the ROI on technology investments aimed at improving operational efficiency vs. customer experience?"
     ],
     competitiveIntel: {
-      competitors: ["Competitor A", "Competitor B", "Competitor C"],
+      competitors: ["Progressive", "GEICO", "State Farm", "Lemonade"],
       insights: [
-        "Main competitor recently deployed AI chatbot with mixed customer reception",
-        "Industry leader investing heavily in cloud-native architecture",
-        "Regional player gaining market share through superior digital experience"
+        "Progressive is the leader in telematics with its 'Snapshot' program, setting the benchmark for usage-based insurance.",
+        "GEICO competes primarily on price and brand recognition, driven by a massive advertising budget and a simple, direct-to-consumer digital experience.",
+        "Lemonade is capturing the younger demographic with a mobile-first experience and AI-powered claims processing, though they struggle with profitability.",
+        "State Farm leverages its vast network of local agents to build strong customer relationships, a moat that is difficult for digital players to overcome."
       ]
     },
     nextSteps: [
-      "Schedule technical deep-dive with CTO and architecture team",
-      "Provide watsonx.ai demonstration focused on fraud detection use case",
-      "Share case studies from similar financial services clients",
-      "Arrange reference call with existing customer in banking sector"
+      "Propose a half-day 'AI in Claims Modernization' workshop with Elena Petrova's and Dr. Bhatt's teams.",
+      "Deliver a tailored watsonx.ai and watsonx.governance demo focused on a real-world claims fraud and bias detection scenario.",
+      "Share the case study of a large European insurer who reduced claims processing time by 40% using IBM technology.",
+      "Arrange an executive briefing with IBM's Global Insurance Industry Lead to discuss strategic partnership."
     ]
   };
 
