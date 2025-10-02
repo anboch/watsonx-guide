@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 
 interface ClientInputFormProps {
@@ -13,13 +12,13 @@ interface ClientInputFormProps {
 
 export interface ClientData {
   clientName: string;
-  crmIntegration: string;
+  clientInternalCode: string;
 }
 
 export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) => {
   const [formData, setFormData] = useState<ClientData>({
     clientName: "",
-    crmIntegration: "",
+    clientInternalCode: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -53,23 +52,14 @@ export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) =
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="crmIntegration">CRM Integration</Label>
-            <Select
-              value={formData.crmIntegration}
-              onValueChange={(value) => handleChange("crmIntegration", value)}
-            >
-              <SelectTrigger id="crmIntegration">
-                <SelectValue placeholder="Select CRM system" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="salesforce">Salesforce</SelectItem>
-                <SelectItem value="hubspot">HubSpot</SelectItem>
-                <SelectItem value="dynamics">Microsoft Dynamics</SelectItem>
-                <SelectItem value="zoho">Zoho CRM</SelectItem>
-                <SelectItem value="pipedrive">Pipedrive</SelectItem>
-                <SelectItem value="none">No CRM Integration</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="clientInternalCode">Client Internal Code</Label>
+            <Input
+              id="clientInternalCode"
+              value={formData.clientInternalCode}
+              onChange={(e) => handleChange("clientInternalCode", e.target.value)}
+              placeholder="Enter IBM internal client code"
+              required
+            />
           </div>
 
           <Button 

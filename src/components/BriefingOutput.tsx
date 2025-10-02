@@ -11,6 +11,20 @@ interface BriefingOutputProps {
 export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps) => {
   // AI-generated mock data structure - shows what the AI will generate
   const mockBriefing = {
+    crmData: {
+      contactName: "Sarah Chen",
+      contactEmail: "sarah.chen@example.com",
+      contactTitle: "Chief Technology Officer",
+      pastInteractions: [
+        { date: "2024-09-15", type: "Meeting", summary: "Initial AI strategy discussion" },
+        { date: "2024-08-22", type: "Email", summary: "Shared watsonx case studies" },
+        { date: "2024-07-10", type: "Conference", summary: "Met at IBM Think conference" }
+      ],
+      accountStatus: "Active",
+      lastContactDate: "2024-09-15",
+      accountOwner: "John Smith",
+      region: "North America"
+    },
     companyInfo: {
       industry: "Financial Services",
       companySize: "5,000-10,000 employees",
@@ -104,11 +118,61 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
           <Badge variant="secondary">{briefing.companyInfo.industry}</Badge>
           <Badge variant="secondary">{briefing.companyInfo.companySize}</Badge>
           <Badge variant="secondary">{briefing.companyInfo.headquarters}</Badge>
-          <Badge variant="outline">CRM: {clientData.crmIntegration}</Badge>
+          <Badge variant="outline">Code: {clientData.clientInternalCode}</Badge>
         </div>
       </div>
 
       <Separator />
+
+      {/* CRM Data */}
+      <Card className="border-border">
+        <CardHeader>
+          <CardTitle className="text-lg">CRM Data</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <div className="text-muted-foreground">Primary Contact</div>
+              <div className="font-medium">{briefing.crmData.contactName}</div>
+              <div className="text-muted-foreground text-xs">{briefing.crmData.contactTitle}</div>
+            </div>
+            <div>
+              <div className="text-muted-foreground">Contact Email</div>
+              <div className="font-medium">{briefing.crmData.contactEmail}</div>
+            </div>
+            <div>
+              <div className="text-muted-foreground">Account Owner</div>
+              <div className="font-medium">{briefing.crmData.accountOwner}</div>
+            </div>
+            <div>
+              <div className="text-muted-foreground">Last Contact</div>
+              <div className="font-medium">{briefing.crmData.lastContactDate}</div>
+            </div>
+            <div>
+              <div className="text-muted-foreground">Account Status</div>
+              <Badge variant="secondary">{briefing.crmData.accountStatus}</Badge>
+            </div>
+            <div>
+              <div className="text-muted-foreground">Region</div>
+              <div className="font-medium">{briefing.crmData.region}</div>
+            </div>
+          </div>
+          <Separator />
+          <div>
+            <div className="text-sm font-medium mb-2">Past Interactions</div>
+            <div className="space-y-2">
+              {briefing.crmData.pastInteractions.map((interaction: any, idx: number) => (
+                <div key={idx} className="text-sm flex items-start gap-2">
+                  <span className="text-muted-foreground">{interaction.date}</span>
+                  <span className="text-muted-foreground">•</span>
+                  <span className="font-medium">{interaction.type}:</span>
+                  <span>{interaction.summary}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Company Overview */}
       <Card className="border-border">
