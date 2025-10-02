@@ -3,7 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ArrowRight } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChevronDown, ArrowRight, Building2, TrendingUp, Lightbulb, Target, Zap, MessageSquare, Users, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClientData } from "./ClientInputForm";
@@ -16,6 +17,7 @@ interface BriefingOutputProps {
 export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps) => {
   const navigate = useNavigate();
   const [expandedSolution, setExpandedSolution] = useState<string | null>(null);
+  const [showAllSolutions, setShowAllSolutions] = useState(false);
   
   const CircularProgress = ({ value, isTop }: { value: number; isTop: boolean }) => {
     const radius = 32;
@@ -55,7 +57,7 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       </div>
     );
   };
-  // AI-generated mock data structure - filled with ELITE, realistic data for Allstate
+
   const mockBriefing = {
     crmData: {
       contactName: "Elena Petrova",
@@ -213,307 +215,473 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
 
   const briefing = briefingData || mockBriefing;
   
-  // Find the highest compatibility score
+  // Find the highest compatibility score and top solutions
   const maxCompatibility = Math.max(...briefing.solutionMapping.map((s: any) => s.compatibility));
+  const topSolution = briefing.solutionMapping.find((s: any) => s.compatibility === maxCompatibility);
+  const sortedSolutions = [...briefing.solutionMapping].sort((a: any, b: any) => b.compatibility - a.compatibility);
+  const topThreeSolutions = sortedSolutions.slice(0, 3);
+  const remainingSolutions = sortedSolutions.slice(3);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="space-y-4">
-        <h2 className="text-3xl font-bold">{clientData.clientName}</h2>
-        <div className="flex gap-2 flex-wrap">
-          <Badge variant="secondary">{briefing.companyInfo.industry}</Badge>
-          <Badge variant="secondary">{briefing.companyInfo.companySize}</Badge>
-          <Badge variant="secondary">{briefing.companyInfo.headquarters}</Badge>
-          <Badge variant="outline">Code: {clientData.clientInternalCode}</Badge>
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* CRM Data */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">CRM Data</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <div className="text-muted-foreground">Primary Contact</div>
-              <div className="font-medium">{briefing.crmData.contactName}</div>
-              <div className="text-muted-foreground text-xs">{briefing.crmData.contactTitle}</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">Contact Email</div>
-              <div className="font-medium">{briefing.crmData.contactEmail}</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">Account Owner</div>
-              <div className="font-medium">{briefing.crmData.accountOwner}</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">Last Contact</div>
-              <div className="font-medium">{briefing.crmData.lastContactDate}</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">Account Status</div>
-              <Badge variant="secondary">{briefing.crmData.accountStatus}</Badge>
-            </div>
-            <div>
-              <div className="text-muted-foreground">Region</div>
-              <div className="font-medium">{briefing.crmData.region}</div>
-            </div>
-          </div>
-          <Separator />
+    <div className="space-y-6 pb-8">
+      {/* Sticky Summary Bar */}
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border -mx-6 px-6 py-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="text-sm font-medium mb-2">Past Interactions</div>
-            <div className="space-y-2">
-              {briefing.crmData.pastInteractions.map((interaction: any, idx: number) => (
-                <div key={idx} className="text-sm flex items-start gap-2">
-                  <span className="text-muted-foreground">{interaction.date}</span>
-                  <span className="text-muted-foreground">•</span>
-                  <span className="font-medium">{interaction.type}:</span>
-                  <span>{interaction.summary}</span>
-                </div>
-              ))}
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <Building2 className="h-6 w-6 text-primary" />
+              {clientData.clientName}
+            </h2>
+            <div className="flex gap-2 flex-wrap mt-2">
+              <Badge variant="secondary">{briefing.companyInfo.industry}</Badge>
+              <Badge variant="secondary">{briefing.companyInfo.revenue}</Badge>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Company Overview */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">Company Overview</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <div>
-              <div className="text-muted-foreground">Revenue</div>
-              <div className="font-medium">{briefing.companyInfo.revenue}</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">Employees</div>
-              <div className="font-medium">{briefing.companyInfo.companySize}</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">Founded</div>
-              <div className="font-medium">{briefing.companyInfo.founded}</div>
-            </div>
-            <div>
-              <div className="text-muted-foreground">HQ</div>
-              <div className="font-medium">{briefing.companyInfo.headquarters}</div>
-            </div>
+          <div className="flex flex-col items-start md:items-end gap-2">
+            <div className="text-sm text-muted-foreground">Top Recommendation</div>
+            <Badge className="text-sm">{topSolution.product}</Badge>
+            <div className="text-2xl font-bold text-primary">{topSolution.compatibility}% Match</div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Summary & Context */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">Executive Summary</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-foreground text-sm">{briefing.summary}</p>
-          <p className="text-muted-foreground text-sm">{briefing.context}</p>
-        </CardContent>
-      </Card>
-
-      {/* Opportunity Intelligence */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">Opportunity Intelligence</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {briefing.opportunities.map((opp: any, idx: number) => (
-              <div key={idx} className="space-y-1">
-                <div className="flex items-start justify-between gap-2">
-                  <h4 className="font-medium text-sm">{opp.title}</h4>
-                  <span className="text-xs text-muted-foreground whitespace-nowrap">{opp.date}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">{opp.description}</p>
-                {idx < briefing.opportunities.length - 1 && <Separator className="mt-4" />}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Pain Points */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">Identified Pain Points</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2">
-            {briefing.painPoints.map((point: string, idx: number) => (
-              <li key={idx} className="flex items-start gap-2 text-sm">
-                <span className="text-muted-foreground">•</span>
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-
-      {/* IBM watsonx Solutions */}
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold">IBM watsonx Solution Mapping</h3>
-        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {briefing.solutionMapping.map((solution: any, idx: number) => {
-            const isTop = solution.compatibility === maxCompatibility;
-            const isExpanded = expandedSolution === solution.product;
-            
-            return (
-              <Collapsible
-                key={idx}
-                open={isExpanded}
-                onOpenChange={(open) => setExpandedSolution(open ? solution.product : null)}
-              >
-                <Card className={`
-                  transition-all duration-300 cursor-pointer
-                  ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 overflow-y-auto' : 'relative min-h-[280px] flex flex-col'}
-                  ${isTop && !isExpanded ? 'border-primary bg-primary/5' : 'border-border bg-card'}
-                  ${!isTop && !isExpanded ? 'opacity-70' : ''}
-                  hover:border-primary/50
-                `}>
-                  <CollapsibleTrigger className="w-full text-left flex-1 flex flex-col">
-                    <CardHeader className="pb-3 flex-1 flex flex-col">
-                      <div className="flex items-start justify-between gap-2 mb-3">
-                        <div className="flex-1 min-h-[60px]">
-                          <CardTitle className={`text-base mb-2 ${isTop ? 'text-primary' : ''}`}>
-                            {solution.product}
-                          </CardTitle>
-                          <p className="text-xs text-muted-foreground line-clamp-2">{solution.shortDescription}</p>
-                        </div>
-                        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
-                      </div>
-                      <div className="flex items-center justify-center mt-auto">
-                        <CircularProgress value={solution.compatibility} isTop={isTop} />
-                      </div>
-                    </CardHeader>
-                  </CollapsibleTrigger>
-                  
-                  <CollapsibleContent>
-                    <CardContent className="pt-0 space-y-4">
-                      <Separator />
-                      
-                      <div>
-                        <h5 className="text-xs font-medium text-muted-foreground mb-1">Overview</h5>
-                        <p className="text-sm">{solution.reason}</p>
-                      </div>
-                      
-                      <div>
-                        <h5 className="text-xs font-medium text-primary mb-1">Why Interesting</h5>
-                        <p className="text-sm text-muted-foreground">{solution.whyInteresting}</p>
-                      </div>
-                      
-                      <div>
-                        <h5 className="text-xs font-medium text-muted-foreground mb-1">Considerations</h5>
-                        <p className="text-sm text-muted-foreground">{solution.whyNotInteresting}</p>
-                      </div>
-                      
-                      <div>
-                        <h5 className="text-xs font-medium text-muted-foreground mb-2">Key Use Cases</h5>
-                        <div className="flex flex-wrap gap-1.5">
-                          {solution.useCases.map((useCase: string, ucIdx: number) => (
-                            <Badge key={ucIdx} variant="outline" className="text-xs">
-                              {useCase}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </CollapsibleContent>
-                </Card>
-              </Collapsible>
-            );
-          })}
         </div>
-        
-        {/* Backdrop when expanded */}
-        {expandedSolution && (
-          <div 
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
-            onClick={() => setExpandedSolution(null)}
-          />
-        )}
       </div>
 
-      {/* Key Questions */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">Strategic Questions for Meeting</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ol className="space-y-2">
-            {briefing.keyQuestions.map((question: string, idx: number) => (
-              <li key={idx} className="flex gap-3 text-sm">
-                <span className="text-muted-foreground">{idx + 1}.</span>
-                <span>{question}</span>
-              </li>
-            ))}
-          </ol>
-        </CardContent>
-      </Card>
+      {/* Tabbed Interface */}
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4 h-auto">
+          <TabsTrigger value="overview" className="flex items-center gap-2 py-3">
+            <Building2 className="h-4 w-4" />
+            <span className="hidden sm:inline">Overview</span>
+          </TabsTrigger>
+          <TabsTrigger value="opportunities" className="flex items-center gap-2 py-3">
+            <TrendingUp className="h-4 w-4" />
+            <span className="hidden sm:inline">Opportunities</span>
+          </TabsTrigger>
+          <TabsTrigger value="solutions" className="flex items-center gap-2 py-3">
+            <Zap className="h-4 w-4" />
+            <span className="hidden sm:inline">Solutions</span>
+          </TabsTrigger>
+          <TabsTrigger value="strategy" className="flex items-center gap-2 py-3">
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden sm:inline">Strategy</span>
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Competitive Intelligence */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">Competitive Intelligence</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <div>
-              <div className="text-sm font-medium mb-2">Key Competitors</div>
-              <div className="flex flex-wrap gap-1.5">
-                {briefing.competitiveIntel.competitors.map((comp: string, idx: number) => (
-                  <Badge key={idx} variant="secondary">
-                    {comp}
-                  </Badge>
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          {/* CRM Data */}
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Users className="h-5 w-5 text-primary" />
+                CRM Data
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Primary Contact</div>
+                  <div className="font-medium text-base">{briefing.crmData.contactName}</div>
+                  <div className="text-sm text-muted-foreground">{briefing.crmData.contactTitle}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Contact Email</div>
+                  <div className="font-medium text-base">{briefing.crmData.contactEmail}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Account Owner</div>
+                  <div className="font-medium text-base">{briefing.crmData.accountOwner}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Last Contact</div>
+                  <div className="font-medium text-base">{briefing.crmData.lastContactDate}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Account Status</div>
+                  <Badge variant="secondary">{briefing.crmData.accountStatus}</Badge>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Region</div>
+                  <div className="font-medium text-base">{briefing.crmData.region}</div>
+                </div>
+              </div>
+              <Separator />
+              <Collapsible>
+                <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors">
+                  <ChevronDown className="h-4 w-4" />
+                  Past Interactions ({briefing.crmData.pastInteractions.length})
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-3">
+                  <div className="space-y-3">
+                    {briefing.crmData.pastInteractions.map((interaction: any, idx: number) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                        <div className="text-sm text-muted-foreground whitespace-nowrap">{interaction.date}</div>
+                        <div>
+                          <div className="font-medium text-sm mb-1">{interaction.type}</div>
+                          <div className="text-sm text-muted-foreground">{interaction.summary}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </CardContent>
+          </Card>
+
+          {/* Company Overview */}
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-primary" />
+                Company Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Revenue</div>
+                  <div className="font-semibold text-lg">{briefing.companyInfo.revenue}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Employees</div>
+                  <div className="font-semibold text-lg">{briefing.companyInfo.companySize}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">Founded</div>
+                  <div className="font-semibold text-lg">{briefing.companyInfo.founded}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">HQ</div>
+                  <div className="font-semibold text-lg">{briefing.companyInfo.headquarters}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Summary & Context */}
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Lightbulb className="h-5 w-5 text-primary" />
+                Executive Summary
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-base leading-relaxed">{briefing.summary}</p>
+              <div className="p-4 bg-muted/30 rounded-lg border-l-4 border-primary">
+                <p className="text-base text-muted-foreground leading-relaxed">{briefing.context}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Opportunities Tab */}
+        <TabsContent value="opportunities" className="space-y-6">
+          {/* Opportunity Intelligence */}
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                Opportunity Intelligence
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {briefing.opportunities.map((opp: any, idx: number) => (
+                  <div key={idx} className="p-4 bg-muted/30 rounded-lg space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <h4 className="font-semibold text-base">{opp.title}</h4>
+                      <Badge variant="outline" className="whitespace-nowrap">{opp.date}</Badge>
+                    </div>
+                    <p className="text-base text-muted-foreground leading-relaxed">{opp.description}</p>
+                  </div>
                 ))}
               </div>
-            </div>
-            <Separator />
-            <div>
-              <div className="text-sm font-medium mb-2">Market Insights</div>
-              <ul className="space-y-2">
-                {briefing.competitiveIntel.insights.map((insight: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm">
-                    <span className="text-muted-foreground">•</span>
-                    <span>{insight}</span>
+            </CardContent>
+          </Card>
+
+          {/* Pain Points */}
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Target className="h-5 w-5 text-primary" />
+                Identified Pain Points
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3">
+                {briefing.painPoints.map((point: string, idx: number) => (
+                  <li key={idx} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span className="text-base">{point}</span>
                   </li>
                 ))}
               </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Next Steps */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">Recommended Next Steps</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ol className="space-y-2">
-            {briefing.nextSteps.map((step: string, idx: number) => (
-              <li key={idx} className="flex gap-3 text-sm">
-                <span className="text-muted-foreground">{idx + 1}.</span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-        </CardContent>
-      </Card>
+        {/* Solutions Tab */}
+        <TabsContent value="solutions" className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-semibold flex items-center gap-2">
+                <Zap className="h-5 w-5 text-primary" />
+                IBM watsonx Solution Mapping
+              </h3>
+            </div>
+            
+            {/* Top 3 Solutions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {topThreeSolutions.map((solution: any, idx: number) => {
+                const isTop = solution.compatibility === maxCompatibility;
+                const isExpanded = expandedSolution === solution.product;
+                
+                return (
+                  <Collapsible
+                    key={idx}
+                    open={isExpanded}
+                    onOpenChange={(open) => setExpandedSolution(open ? solution.product : null)}
+                  >
+                    <Card className={`
+                      transition-all duration-300 cursor-pointer
+                      ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 overflow-y-auto' : 'relative min-h-[300px] flex flex-col'}
+                      ${isTop && !isExpanded ? 'border-primary bg-primary/5' : 'border-border bg-card'}
+                      hover:border-primary/50
+                    `}>
+                      <CollapsibleTrigger className="w-full text-left flex-1 flex flex-col">
+                        <CardHeader className="pb-4 flex-1 flex flex-col">
+                          <div className="flex items-start justify-between gap-2 mb-4">
+                            <div className="flex-1">
+                              <CardTitle className={`text-lg mb-2 ${isTop ? 'text-primary' : ''}`}>
+                                {solution.product}
+                                {isTop && <Badge className="ml-2">Best Match</Badge>}
+                              </CardTitle>
+                              <p className="text-sm text-muted-foreground">{solution.shortDescription}</p>
+                            </div>
+                            <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
+                          </div>
+                          <div className="flex items-center justify-center mt-auto">
+                            <CircularProgress value={solution.compatibility} isTop={isTop} />
+                          </div>
+                        </CardHeader>
+                      </CollapsibleTrigger>
+                      
+                      <CollapsibleContent>
+                        <CardContent className="pt-0 space-y-6">
+                          <Separator />
+                          
+                          <div>
+                            <h5 className="text-sm font-semibold text-muted-foreground mb-2">Overview</h5>
+                            <p className="text-base leading-relaxed">{solution.reason}</p>
+                          </div>
+                          
+                          <div className="p-4 bg-primary/10 rounded-lg border-l-4 border-primary">
+                            <h5 className="text-sm font-semibold text-primary mb-2">Why Interesting</h5>
+                            <p className="text-base leading-relaxed">{solution.whyInteresting}</p>
+                          </div>
+                          
+                          <div>
+                            <h5 className="text-sm font-semibold text-muted-foreground mb-2">Considerations</h5>
+                            <p className="text-base text-muted-foreground leading-relaxed">{solution.whyNotInteresting}</p>
+                          </div>
+                          
+                          <div>
+                            <h5 className="text-sm font-semibold text-muted-foreground mb-3">Key Use Cases</h5>
+                            <div className="flex flex-wrap gap-2">
+                              {solution.useCases.map((useCase: string, ucIdx: number) => (
+                                <Badge key={ucIdx} variant="outline" className="text-sm">
+                                  {useCase}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </CollapsibleContent>
+                    </Card>
+                  </Collapsible>
+                );
+              })}
+            </div>
+
+            {/* View All Solutions */}
+            {remainingSolutions.length > 0 && (
+              <Collapsible open={showAllSolutions} onOpenChange={setShowAllSolutions}>
+                <div className="flex justify-center">
+                  <CollapsibleTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      {showAllSolutions ? 'Show Less' : `View ${remainingSolutions.length} More Solutions`}
+                      <ChevronDown className={`h-4 w-4 transition-transform ${showAllSolutions ? 'rotate-180' : ''}`} />
+                    </Button>
+                  </CollapsibleTrigger>
+                </div>
+                
+                <CollapsibleContent className="mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {remainingSolutions.map((solution: any, idx: number) => {
+                      const isExpanded = expandedSolution === solution.product;
+                      
+                      return (
+                        <Collapsible
+                          key={idx}
+                          open={isExpanded}
+                          onOpenChange={(open) => setExpandedSolution(open ? solution.product : null)}
+                        >
+                          <Card className={`
+                            transition-all duration-300 cursor-pointer
+                            ${isExpanded ? 'fixed inset-4 md:inset-8 z-50 overflow-y-auto' : 'relative min-h-[300px] flex flex-col'}
+                            border-border bg-card hover:border-primary/50
+                          `}>
+                            <CollapsibleTrigger className="w-full text-left flex-1 flex flex-col">
+                              <CardHeader className="pb-4 flex-1 flex flex-col">
+                                <div className="flex items-start justify-between gap-2 mb-4">
+                                  <div className="flex-1">
+                                    <CardTitle className="text-lg mb-2">{solution.product}</CardTitle>
+                                    <p className="text-sm text-muted-foreground">{solution.shortDescription}</p>
+                                  </div>
+                                  <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} />
+                                </div>
+                                <div className="flex items-center justify-center mt-auto">
+                                  <CircularProgress value={solution.compatibility} isTop={false} />
+                                </div>
+                              </CardHeader>
+                            </CollapsibleTrigger>
+                            
+                            <CollapsibleContent>
+                              <CardContent className="pt-0 space-y-6">
+                                <Separator />
+                                
+                                <div>
+                                  <h5 className="text-sm font-semibold text-muted-foreground mb-2">Overview</h5>
+                                  <p className="text-base leading-relaxed">{solution.reason}</p>
+                                </div>
+                                
+                                <div className="p-4 bg-primary/10 rounded-lg border-l-4 border-primary">
+                                  <h5 className="text-sm font-semibold text-primary mb-2">Why Interesting</h5>
+                                  <p className="text-base leading-relaxed">{solution.whyInteresting}</p>
+                                </div>
+                                
+                                <div>
+                                  <h5 className="text-sm font-semibold text-muted-foreground mb-2">Considerations</h5>
+                                  <p className="text-base text-muted-foreground leading-relaxed">{solution.whyNotInteresting}</p>
+                                </div>
+                                
+                                <div>
+                                  <h5 className="text-sm font-semibold text-muted-foreground mb-3">Key Use Cases</h5>
+                                  <div className="flex flex-wrap gap-2">
+                                    {solution.useCases.map((useCase: string, ucIdx: number) => (
+                                      <Badge key={ucIdx} variant="outline" className="text-sm">
+                                        {useCase}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </CollapsibleContent>
+                          </Card>
+                        </Collapsible>
+                      );
+                    })}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+            
+            {/* Backdrop when expanded */}
+            {expandedSolution && (
+              <div 
+                className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+                onClick={() => setExpandedSolution(null)}
+              />
+            )}
+          </div>
+        </TabsContent>
+
+        {/* Strategy Tab */}
+        <TabsContent value="strategy" className="space-y-6">
+          {/* Key Questions */}
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-primary" />
+                Strategic Questions for Meeting
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {briefing.keyQuestions.map((question: string, idx: number) => (
+                  <div key={idx} className="flex gap-4 p-3 bg-muted/30 rounded-lg">
+                    <span className="text-primary font-bold text-lg">{idx + 1}.</span>
+                    <span className="text-base">{question}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Competitive Intelligence */}
+          <Card className="border-border">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Users className="h-5 w-5 text-primary" />
+                Competitive Intelligence
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-sm font-semibold mb-3 text-muted-foreground">Key Competitors</div>
+                  <div className="flex flex-wrap gap-2">
+                    {briefing.competitiveIntel.competitors.map((comp: string, idx: number) => (
+                      <Badge key={idx} variant="secondary" className="text-sm">
+                        {comp}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                <Separator />
+                <div>
+                  <div className="text-sm font-semibold mb-3 text-muted-foreground">Market Insights</div>
+                  <ul className="space-y-3">
+                    {briefing.competitiveIntel.insights.map((insight: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                        <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <span className="text-base">{insight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Next Steps */}
+          <Card className="border-border border-primary/50 bg-primary/5">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center gap-2">
+                <ArrowRight className="h-5 w-5 text-primary" />
+                Recommended Next Steps
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {briefing.nextSteps.map((step: string, idx: number) => (
+                  <div key={idx} className="flex gap-4 p-3 bg-background/50 rounded-lg">
+                    <span className="text-primary font-bold text-lg">{idx + 1}.</span>
+                    <span className="text-base">{step}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Contact & Schedule Button */}
-      <div className="flex justify-center pt-8">
+      <div className="flex justify-center pt-6">
         <Button 
           size="lg"
           onClick={() => navigate('/contact', { state: { clientData } })}
-          className="gap-2"
+          className="gap-2 text-base px-8"
         >
           Proceed to Contact & Schedule
           <ArrowRight className="h-5 w-5" />
