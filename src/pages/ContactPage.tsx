@@ -13,14 +13,39 @@ const ContactPage = () => {
   const location = useLocation();
   const { toast } = useToast();
   const clientData = location.state?.clientData;
+  
+  // Mock briefing data - in production this would come from the actual briefing
+  const briefingData = {
+    contactName: "Elena Petrova",
+    contactEmail: "elena.petrova@allstate.com",
+    contactPhone: "+1 (847) 402-5000",
+  };
 
   const [contactInfo, setContactInfo] = useState({
     name: "",
     email: "",
     phone: "",
-    language: "en",
+    language: "en", // In production, this will be automatically selected by AI based on briefing data
   });
   const [copied, setCopied] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const handleCopyFromBriefing = (field: 'name' | 'email' | 'phone') => {
+    const fieldMap = {
+      name: briefingData.contactName,
+      email: briefingData.contactEmail,
+      phone: briefingData.contactPhone,
+    };
+    
+    setContactInfo(prev => ({ ...prev, [field]: fieldMap[field] }));
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 1500);
+    
+    toast({
+      title: "Data Copied",
+      description: `${field.charAt(0).toUpperCase() + field.slice(1)} populated from briefing`,
+    });
+  };
 
   const handleTeamsMeeting = () => {
     const subject = encodeURIComponent(`IBM Solutions Discussion - ${clientData?.clientName || 'Your Company'}`);
@@ -115,35 +140,83 @@ const ContactPage = () => {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Contact Name</Label>
-                  <Input
-                    id="name"
-                    placeholder="John Smith"
-                    value={contactInfo.name}
-                    onChange={(e) => setContactInfo(prev => ({ ...prev, name: e.target.value }))}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      id="name"
+                      placeholder="John Smith"
+                      value={contactInfo.name}
+                      onChange={(e) => setContactInfo(prev => ({ ...prev, name: e.target.value }))}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      onClick={() => handleCopyFromBriefing('name')}
+                      title="Copy from briefing"
+                    >
+                      {copiedField === 'name' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="john.smith@company.com"
-                    value={contactInfo.email}
-                    onChange={(e) => setContactInfo(prev => ({ ...prev, email: e.target.value }))}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="john.smith@company.com"
+                      value={contactInfo.email}
+                      onChange={(e) => setContactInfo(prev => ({ ...prev, email: e.target.value }))}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      onClick={() => handleCopyFromBriefing('email')}
+                      title="Copy from briefing"
+                    >
+                      {copiedField === 'email' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
               
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="+1 (555) 123-4567"
-                    value={contactInfo.phone}
-                    onChange={(e) => setContactInfo(prev => ({ ...prev, phone: e.target.value }))}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="+1 (555) 123-4567"
+                      value={contactInfo.phone}
+                      onChange={(e) => setContactInfo(prev => ({ ...prev, phone: e.target.value }))}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      onClick={() => handleCopyFromBriefing('phone')}
+                      title="Copy from briefing"
+                    >
+                      {copiedField === 'phone' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="language">Preferred Language</Label>
@@ -164,6 +237,9 @@ const ContactPage = () => {
                       <SelectItem value="ja">日本語</SelectItem>
                     </SelectContent>
                   </Select>
+                  <p className="text-xs text-muted-foreground">
+                    In production, this will be automatically selected by AI
+                  </p>
                 </div>
               </div>
             </CardContent>
