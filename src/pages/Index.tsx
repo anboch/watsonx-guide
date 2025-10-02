@@ -86,7 +86,7 @@ const Index = () => {
               <div className="bg-white p-1.5 rounded-md shadow-sm">
                 <img src={detectiveLogo} alt="Sales Intelligence Logo" className="h-12 w-12" />
               </div>
-              <h1 className="text-3xl font-bold">IBM Sales Intelligence</h1>
+              <h1 className="text-3xl font-bold">IBM watsonx.sales</h1>
             </div>
             <p className="text-muted-foreground">AI-powered client briefings</p>
           </div>
