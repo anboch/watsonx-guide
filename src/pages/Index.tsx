@@ -3,6 +3,7 @@ import { ClientInputForm, ClientData } from "@/components/ClientInputForm";
 import { BriefingOutput } from "@/components/BriefingOutput";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import ibmLogo from "@/assets/ibm-logo.png";
 
 const Index = () => {
   const [showBriefing, setShowBriefing] = useState(false);
@@ -31,7 +32,10 @@ const Index = () => {
       <header className="border-b border-border">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold mb-2">IBM Sales Intelligence</h1>
+            <div className="flex items-center gap-3 mb-2">
+              <img src={ibmLogo} alt="IBM Logo" className="h-10 w-10" />
+              <h1 className="text-3xl font-bold">IBM Sales Intelligence</h1>
+            </div>
             <p className="text-muted-foreground">AI-powered client briefings</p>
           </div>
         </div>
