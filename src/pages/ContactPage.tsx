@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Mail, Calendar, Phone, MessageSquare, Video, Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const ContactPage = () => {
   const navigate = useNavigate();
@@ -21,12 +22,25 @@ const ContactPage = () => {
     contactPhone: "No phone available",
   };
 
-  // Redirect to auth if not logged in (mockup behavior)
+  // Check authentication status
   useEffect(() => {
-    const hasVisited = sessionStorage.getItem("mockLoggedIn");
-    if (!hasVisited) {
-      navigate("/auth");
-    }
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth");
+      }
+    };
+    
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) {
+        navigate("/auth");
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   const [contactInfo, setContactInfo] = useState({
