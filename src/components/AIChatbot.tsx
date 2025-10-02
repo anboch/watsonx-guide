@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MessageSquare, X, Send, Plus, FileText, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { MessageSquare, X, Send, Plus, FileText, Image as ImageIcon, Link as LinkIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,6 +16,8 @@ export const AIChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
   const [uploadMenuOpen, setUploadMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -23,6 +25,16 @@ export const AIChatbot = () => {
       timestamp: new Date(),
     },
   ]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
+    }
+  }, [messages]);
 
   const handleUploadOption = (type: 'image' | 'document' | 'link') => {
     // Mock upload handler - in production this would trigger file pickers or link input
@@ -34,25 +46,58 @@ export const AIChatbot = () => {
     setUploadMenuOpen(false);
   };
 
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
+  const handleSendMessage = async () => {
+    if (!inputMessage.trim() || isLoading) return;
     
-    setMessages([...messages, {
-      role: "user",
-      content: inputMessage,
+    const userMessage = inputMessage;
+    setInputMessage("");
+    
+    const newMessages = [...messages, {
+      role: "user" as const,
+      content: userMessage,
       timestamp: new Date(),
-    }]);
+    }];
     
-    // Mock AI response
-    setTimeout(() => {
+    setMessages(newMessages);
+    setIsLoading(true);
+    
+    try {
+      const FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+      
+      const response = await fetch(FUNCTION_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: newMessages.map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get AI response');
+      }
+
+      const result = await response.json();
+      
       setMessages(prev => [...prev, {
         role: "assistant",
-        content: "This is a mock response. In production, this would use the selected LLM model to analyze your documents and provide insights.",
+        content: result.message,
         timestamp: new Date(),
       }]);
-    }, 1000);
-    
-    setInputMessage("");
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: "I apologize, but I encountered an error. Please try again.",
+        timestamp: new Date(),
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,7 +136,7 @@ export const AIChatbot = () => {
 
 
         {/* Chat Messages */}
-        <ScrollArea className="flex-1 p-4">
+        <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
           <div className="space-y-4">
             {messages.map((message, idx) => (
               <div
@@ -116,6 +161,14 @@ export const AIChatbot = () => {
                 </span>
               </div>
             ))}
+            {isLoading && (
+              <div className="flex items-start gap-1">
+                <div className="max-w-[85%] rounded-lg px-4 py-2 text-sm bg-muted flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Thinking...</span>
+                </div>
+              </div>
+            )}
           </div>
         </ScrollArea>
 
@@ -164,8 +217,8 @@ export const AIChatbot = () => {
               onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
               className="flex-1"
             />
-            <Button size="icon" onClick={handleSendMessage}>
-              <Send className="h-4 w-4" />
+            <Button size="icon" onClick={handleSendMessage} disabled={isLoading || !inputMessage.trim()}>
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
         </div>
