@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ClientInputForm, ClientData } from "@/components/ClientInputForm";
 import { BriefingOutput } from "@/components/BriefingOutput";
 import { Button } from "@/components/ui/button";
@@ -6,9 +7,18 @@ import { ArrowLeft } from "lucide-react";
 import detectiveLogo from "@/assets/detective-logo.png";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [showBriefing, setShowBriefing] = useState(false);
   const [clientData, setClientData] = useState<ClientData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect to auth page on first visit (mockup behavior)
+  useEffect(() => {
+    const hasVisited = sessionStorage.getItem("mockLoggedIn");
+    if (!hasVisited) {
+      navigate("/auth");
+    }
+  }, [navigate]);
 
   const handleFormSubmit = async (data: ClientData) => {
     setIsLoading(true);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,14 @@ const ContactPage = () => {
   const location = useLocation();
   const { toast } = useToast();
   const clientData = location.state?.clientData;
+
+  // Redirect to auth if not logged in (mockup behavior)
+  useEffect(() => {
+    const hasVisited = sessionStorage.getItem("mockLoggedIn");
+    if (!hasVisited) {
+      navigate("/auth");
+    }
+  }, [navigate]);
   
   // Mock briefing data - in production this would come from the actual briefing
   const briefingData = {
