@@ -81,11 +81,28 @@ The JSON structure must be:
       "text": "string (source description like 'Company Website - About Page', 'Q4 2024 Earnings Report', 'Industry Analysis Report 2024')",
       "url": "string (realistic URL)"
     }
-  ]
+  ],
+  "confidentialityLevel": "string - one of: 'public', 'internal', 'confidential', 'restricted'",
+  "sensitiveDataTags": {
+    "crmData": ["array of strings - types of sensitive data in CRM (e.g., 'financial', 'contact', 'strategic')"],
+    "companyInfo": ["array of strings - types of sensitive data in company info"],
+    "opportunities": ["array of strings - types of sensitive data in opportunities"]
+  }
 }
 
 CRITICAL: Add reference citations throughout the content using [ref:X] format where X is the reference ID number.
 For example: "The company reported $5.2B in revenue [ref:1] and plans to expand into AI [ref:2]."
+
+CONFIDENTIALITY & SENSITIVITY ASSESSMENT:
+- Assess the overall confidentiality level based on the information contained:
+  * 'public': General market information, publicly available company data
+  * 'internal': Business strategy, internal metrics, CRM data with no personal contact details
+  * 'confidential': Detailed financials, executive contact information, competitive intelligence
+  * 'restricted': Highly sensitive strategic plans, personal contact details, proprietary data
+- Tag sensitive data types found in each section:
+  * For crmData: ['contact', 'financial', 'strategic', 'personal']
+  * For companyInfo: ['financial', 'strategic', 'operational']
+  * For opportunities: ['strategic', 'financial', 'competitive']
 
 Generate realistic, detailed information with 8-12 references from various sources (company website, earnings reports, industry publications, news articles, analyst reports).
 Include at least 6-8 IBM watsonx solution options in solutionMapping with varying compatibility scores (55-95).`;

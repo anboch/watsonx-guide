@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronDown, ArrowRight, Building2, TrendingUp, Lightbulb, Target, Zap, MessageSquare, Users, CheckCircle2 } from "lucide-react";
+import { ChevronDown, ArrowRight, Building2, TrendingUp, Lightbulb, Target, Zap, MessageSquare, Users, CheckCircle2, Shield, AlertTriangle, Lock, Eye } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClientData } from "./ClientInputForm";
@@ -12,6 +12,39 @@ import { ClientData } from "./ClientInputForm";
 interface BriefingOutputProps {
   clientData: ClientData;
 }
+
+const ConfidentialityBadge = ({ level }: { level: string }) => {
+  const config = {
+    public: { icon: Eye, color: 'bg-green-500', label: 'Public' },
+    internal: { icon: Shield, color: 'bg-blue-500', label: 'Internal' },
+    confidential: { icon: AlertTriangle, color: 'bg-orange-500', label: 'Confidential' },
+    restricted: { icon: Lock, color: 'bg-red-500', label: 'Restricted' }
+  };
+  
+  const { icon: Icon, color, label } = config[level as keyof typeof config] || config.internal;
+  
+  return (
+    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${color} text-white text-sm font-medium`}>
+      <Icon className="h-4 w-4" />
+      {label}
+    </div>
+  );
+};
+
+const SensitivityTag = ({ tags }: { tags: string[] }) => {
+  if (!tags || tags.length === 0) return null;
+  
+  return (
+    <div className="flex flex-wrap gap-1.5 mt-2">
+      {tags.map((tag, idx) => (
+        <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-900/20 dark:text-amber-200 dark:border-amber-700">
+          <AlertTriangle className="h-3 w-3" />
+          {tag}
+        </span>
+      ))}
+    </div>
+  );
+};
 
 export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
   const navigate = useNavigate();
@@ -222,6 +255,8 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
   const nextSteps = briefing.nextSteps || [];
   const pastInteractions = briefing.crmData?.pastInteractions || [];
   const references = briefing.references || [];
+  const confidentialityLevel = briefing.confidentialityLevel || 'internal';
+  const sensitiveDataTags = briefing.sensitiveDataTags || {};
 
   // Function to render text with reference links
   const renderWithReferences = (text: string) => {
@@ -271,9 +306,10 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border -mx-6 px-6 py-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold flex items-center gap-2">
+            <h2 className="text-2xl font-bold flex items-center gap-3">
               <Building2 className="h-6 w-6 text-primary" />
               {clientData.clientName}
+              <ConfidentialityBadge level={confidentialityLevel} />
             </h2>
             <div className="flex gap-2 flex-wrap mt-2">
               <Badge variant="secondary">{briefing.companyInfo.industry}</Badge>
@@ -314,9 +350,12 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
           {/* CRM Data */}
           <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" />
-                CRM Data
+              <CardTitle className="text-xl flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-primary" />
+                  CRM Data
+                </div>
+                <SensitivityTag tags={sensitiveDataTags.crmData || ['contact', 'financial']} />
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -373,9 +412,12 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
           {/* Company Overview */}
           <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-primary" />
-                Company Overview
+              <CardTitle className="text-xl flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5 text-primary" />
+                  Company Overview
+                </div>
+                <SensitivityTag tags={sensitiveDataTags.companyInfo || []} />
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -422,9 +464,12 @@ export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
           {/* Opportunity Intelligence */}
           <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-xl flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                Opportunity Intelligence
+              <CardTitle className="text-xl flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  Opportunity Intelligence
+                </div>
+                <SensitivityTag tags={sensitiveDataTags.opportunities || ['strategic']} />
               </CardTitle>
             </CardHeader>
             <CardContent>

@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -10,8 +11,60 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+  const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
   try {
     const { messages } = await req.json();
+    
+    // Rate limiting: 10 messages per minute per IP
+    const clientIp = req.headers.get('x-forwarded-for') || 'unknown';
+    const rateLimitCheck = await supabase
+      .from('chat_rate_limits')
+      .select('*')
+      .eq('user_identifier', clientIp)
+      .single();
+
+    const now = new Date();
+    const oneMinuteAgo = new Date(now.getTime() - 60000);
+
+    if (rateLimitCheck.data) {
+      const windowStart = new Date(rateLimitCheck.data.window_start);
+      
+      if (windowStart > oneMinuteAgo) {
+        // Within current window
+        if (rateLimitCheck.data.request_count >= 10) {
+          console.log(`Rate limit exceeded for IP: ${clientIp}`);
+          return new Response(
+            JSON.stringify({ 
+              error: "Rate limit exceeded. Please wait a moment before sending more messages." 
+            }),
+            { 
+              status: 429, 
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+            }
+          );
+        }
+        
+        // Increment counter
+        await supabase
+          .from('chat_rate_limits')
+          .update({ request_count: rateLimitCheck.data.request_count + 1 })
+          .eq('user_identifier', clientIp);
+      } else {
+        // Start new window
+        await supabase
+          .from('chat_rate_limits')
+          .update({ request_count: 1, window_start: now.toISOString() })
+          .eq('user_identifier', clientIp);
+      }
+    } else {
+      // Create new rate limit entry
+      await supabase
+        .from('chat_rate_limits')
+        .insert({ user_identifier: clientIp, request_count: 1, window_start: now.toISOString() });
+    }
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {

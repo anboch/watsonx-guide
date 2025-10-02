@@ -14,16 +14,82 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      auth_logs: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          success: boolean
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          success: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      chat_rate_limits: {
+        Row: {
+          created_at: string | null
+          id: string
+          request_count: number | null
+          user_identifier: string
+          window_start: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          request_count?: number | null
+          user_identifier: string
+          window_start?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          request_count?: number | null
+          user_identifier?: string
+          window_start?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      clean_old_rate_limits: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      confidentiality_level:
+        | "public"
+        | "internal"
+        | "confidential"
+        | "restricted"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +216,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      confidentiality_level: [
+        "public",
+        "internal",
+        "confidential",
+        "restricted",
+      ],
+    },
   },
 } as const
