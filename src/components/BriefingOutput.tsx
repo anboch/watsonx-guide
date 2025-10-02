@@ -1,6 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 import { ClientData } from "./ClientInputForm";
 
 interface BriefingOutputProps {
@@ -9,6 +12,7 @@ interface BriefingOutputProps {
 }
 
 export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps) => {
+  const [expandedSolution, setExpandedSolution] = useState<string | null>(null);
   // AI-generated mock data structure - shows what the AI will generate
   const mockBriefing = {
     crmData: {
@@ -67,17 +71,29 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
     solutionMapping: [
       {
         product: "watsonx.ai",
+        compatibility: 92,
+        shortDescription: "AI foundation models for intelligent automation",
         reason: "Foundation models can power intelligent customer service, fraud detection, and personalized financial recommendations",
+        whyInteresting: "The client's new CTO has a strong AI background and they've announced a $150M digital transformation initiative. Their current manual fraud detection processes and inconsistent customer experience across channels are perfect use cases for watsonx.ai's capabilities.",
+        whyNotInteresting: "Integration with legacy core banking systems may require significant effort. The organization may need to build internal AI expertise before fully leveraging advanced capabilities.",
         useCases: ["Conversational AI for customer support", "Fraud pattern detection", "Document analysis for loan processing"]
       },
       {
         product: "watsonx.data",
+        compatibility: 88,
+        shortDescription: "Unified data lakehouse for analytics",
         reason: "Unified data lakehouse architecture to break down silos and enable real-time analytics across all customer touchpoints",
+        whyInteresting: "Client explicitly mentioned data silos as a major pain point preventing unified customer view. With upcoming regulatory compliance deadline in Q3 2025, having a unified data platform is critical for automated reporting.",
+        whyNotInteresting: "Requires organizational change management to break down departmental data ownership barriers. Migration from existing data warehouses may be time-consuming.",
         useCases: ["360-degree customer view", "Real-time risk analytics", "Regulatory reporting automation"]
       },
       {
         product: "watsonx.governance",
+        compatibility: 95,
+        shortDescription: "AI governance and compliance",
         reason: "Critical for financial services to ensure AI models meet regulatory requirements and maintain audit trails",
+        whyInteresting: "As a financial services company, regulatory compliance is non-negotiable. The Q3 2025 compliance deadline makes this extremely timely. watsonx.governance provides audit trails and bias detection essential for banking AI applications.",
+        whyNotInteresting: "May be seen as overhead if AI adoption is limited. Requires clear governance policies and processes to be defined upfront.",
         useCases: ["Model risk management", "Compliance monitoring", "Bias detection in lending decisions"]
       }
     ],
@@ -251,29 +267,68 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
       </Card>
 
       {/* IBM watsonx Solutions */}
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle className="text-lg">IBM watsonx Solution Mapping</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {briefing.solutionMapping.map((solution: any, idx: number) => (
-              <div key={idx} className="space-y-2">
-                <h4 className="font-medium text-primary text-sm">{solution.product}</h4>
-                <p className="text-sm text-muted-foreground">{solution.reason}</p>
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {solution.useCases.map((useCase: string, ucIdx: number) => (
-                    <Badge key={ucIdx} variant="outline" className="text-xs">
-                      {useCase}
-                    </Badge>
-                  ))}
-                </div>
-                {idx < briefing.solutionMapping.length - 1 && <Separator className="mt-4" />}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-3">
+        <h3 className="text-lg font-semibold">IBM watsonx Solution Mapping</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {briefing.solutionMapping.map((solution: any, idx: number) => (
+            <Collapsible
+              key={idx}
+              open={expandedSolution === solution.product}
+              onOpenChange={(open) => setExpandedSolution(open ? solution.product : null)}
+            >
+              <Card className="border-border transition-all duration-300 hover:border-primary/50 cursor-pointer">
+                <CollapsibleTrigger className="w-full text-left">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1">
+                        <CardTitle className="text-base mb-2">{solution.product}</CardTitle>
+                        <p className="text-xs text-muted-foreground">{solution.shortDescription}</p>
+                      </div>
+                      <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${expandedSolution === solution.product ? 'rotate-180' : ''}`} />
+                    </div>
+                    <div className="flex items-center gap-2 mt-3">
+                      <div className="text-2xl font-bold text-primary">{solution.compatibility}%</div>
+                      <div className="text-xs text-muted-foreground">compatibility</div>
+                    </div>
+                  </CardHeader>
+                </CollapsibleTrigger>
+                
+                <CollapsibleContent>
+                  <CardContent className="pt-0 space-y-4">
+                    <Separator />
+                    
+                    <div>
+                      <h5 className="text-xs font-medium text-muted-foreground mb-1">Overview</h5>
+                      <p className="text-sm">{solution.reason}</p>
+                    </div>
+                    
+                    <div>
+                      <h5 className="text-xs font-medium text-primary mb-1">Why Interesting</h5>
+                      <p className="text-sm text-muted-foreground">{solution.whyInteresting}</p>
+                    </div>
+                    
+                    <div>
+                      <h5 className="text-xs font-medium text-muted-foreground mb-1">Considerations</h5>
+                      <p className="text-sm text-muted-foreground">{solution.whyNotInteresting}</p>
+                    </div>
+                    
+                    <div>
+                      <h5 className="text-xs font-medium text-muted-foreground mb-2">Key Use Cases</h5>
+                      <div className="flex flex-wrap gap-1.5">
+                        {solution.useCases.map((useCase: string, ucIdx: number) => (
+                          <Badge key={ucIdx} variant="outline" className="text-xs">
+                            {useCase}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          ))}
+        </div>
+      </div>
 
       {/* Key Questions */}
       <Card className="border-border">
