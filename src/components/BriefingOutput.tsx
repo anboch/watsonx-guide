@@ -11,10 +11,9 @@ import { ClientData } from "./ClientInputForm";
 
 interface BriefingOutputProps {
   clientData: ClientData;
-  briefingData?: any;
 }
 
-export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps) => {
+export const BriefingOutput = ({ clientData }: BriefingOutputProps) => {
   const navigate = useNavigate();
   const [expandedSolution, setExpandedSolution] = useState<string | null>(null);
   const [showAllSolutions, setShowAllSolutions] = useState(false);
@@ -213,7 +212,7 @@ export const BriefingOutput = ({ clientData, briefingData }: BriefingOutputProps
     ]
   };
 
-  const briefing = briefingData || mockBriefing;
+  const briefing = clientData.briefingData || mockBriefing;
   
   // Find the highest compatibility score and top solutions
   const maxCompatibility = Math.max(...briefing.solutionMapping.map((s: any) => s.compatibility));

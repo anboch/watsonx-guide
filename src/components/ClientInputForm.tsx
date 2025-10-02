@@ -15,6 +15,7 @@ export interface ClientData {
   clientName: string;
   clientInternalCode: string;
   additionalContext?: string;
+  briefingData?: any;
 }
 
 export const ClientInputForm = ({ onSubmit, isLoading }: ClientInputFormProps) => {

@@ -24,11 +24,37 @@ const Index = () => {
     setIsLoading(true);
     setClientData(data);
     
-    // Simulate API call - will be replaced with real AI generation
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-briefing`;
+      
+      const response = await fetch(FUNCTION_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          clientName: data.clientName,
+          internalCode: data.clientInternalCode,
+          additionalContext: data.additionalContext
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate briefing');
+      }
+
+      const result = await response.json();
+      setClientData({
+        ...data,
+        briefingData: result.briefing
+      });
       setShowBriefing(true);
-    }, 2000);
+    } catch (error) {
+      console.error('Error generating briefing:', error);
+      alert('Failed to generate briefing. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleReset = () => {
