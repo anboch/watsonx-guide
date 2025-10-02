@@ -14,6 +14,13 @@ const ContactPage = () => {
   const { toast } = useToast();
   const clientData = location.state?.clientData;
 
+  // Get actual briefing data from the LLM generation
+  const briefingData = clientData?.briefingData?.crmData || {
+    contactName: "No contact available",
+    contactEmail: "No email available",
+    contactPhone: "No phone available",
+  };
+
   // Redirect to auth if not logged in (mockup behavior)
   useEffect(() => {
     const hasVisited = sessionStorage.getItem("mockLoggedIn");
@@ -21,13 +28,6 @@ const ContactPage = () => {
       navigate("/auth");
     }
   }, [navigate]);
-  
-  // Mock briefing data - in production this would come from the actual briefing
-  const briefingData = {
-    contactName: "Elena Petrova",
-    contactEmail: "elena.petrova@allstate.com",
-    contactPhone: "+1 (847) 402-5000",
-  };
 
   const [contactInfo, setContactInfo] = useState({
     name: "",
@@ -159,12 +159,13 @@ const ContactPage = () => {
                     <Button
                       type="button"
                       size="icon"
-                      variant="outline"
+                      variant={copiedField === 'name' ? "default" : "outline"}
                       onClick={() => handleCopyFromBriefing('name')}
                       title="Copy from briefing"
+                      className="transition-all"
                     >
                       {copiedField === 'name' ? (
-                        <Check className="h-4 w-4 text-green-600" />
+                        <Check className="h-4 w-4" />
                       ) : (
                         <Copy className="h-4 w-4" />
                       )}
@@ -185,12 +186,13 @@ const ContactPage = () => {
                     <Button
                       type="button"
                       size="icon"
-                      variant="outline"
+                      variant={copiedField === 'email' ? "default" : "outline"}
                       onClick={() => handleCopyFromBriefing('email')}
                       title="Copy from briefing"
+                      className="transition-all"
                     >
                       {copiedField === 'email' ? (
-                        <Check className="h-4 w-4 text-green-600" />
+                        <Check className="h-4 w-4" />
                       ) : (
                         <Copy className="h-4 w-4" />
                       )}
@@ -214,12 +216,13 @@ const ContactPage = () => {
                     <Button
                       type="button"
                       size="icon"
-                      variant="outline"
+                      variant={copiedField === 'phone' ? "default" : "outline"}
                       onClick={() => handleCopyFromBriefing('phone')}
                       title="Copy from briefing"
+                      className="transition-all"
                     >
                       {copiedField === 'phone' ? (
-                        <Check className="h-4 w-4 text-green-600" />
+                        <Check className="h-4 w-4" />
                       ) : (
                         <Copy className="h-4 w-4" />
                       )}
